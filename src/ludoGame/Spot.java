@@ -1,3 +1,4 @@
+package ludoGame;
 
 public class Spot {
 	private String catagory = "Neutral";
