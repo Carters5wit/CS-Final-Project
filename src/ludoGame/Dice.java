@@ -18,7 +18,7 @@ public class Dice extends JPanel implements MouseListener {
         // Load dice images
         diceImages = new Image[6];
         for (int i = 0; i < 6; i++) {
-            String imageName = "All in C:\\Users\\ironn\\Desktop\\comp science 2\\Comp-Science\\Computer science-project"+ (i + 1) + ".png";
+            String imageName = "src/images/Dice" + (i + 1) + ".jpg";
             diceImages[i] = new ImageIcon(imageName).getImage();
       
         }
