@@ -18,11 +18,11 @@ public class Main extends Application {
         final StackPane root = new StackPane();
         
         // Create a Board object and add it to the root
-        Board board = new Board(900, 900);
+        Board board = new Board(750, 750);
         root.getChildren().add(board.getCanvas());
         
         // Set scene size and show to screen
-        primaryStage.setScene(new Scene(root, 900, 900));
+        primaryStage.setScene(new Scene(root, 750, 750));
         primaryStage.show();
     }
 }

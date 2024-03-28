@@ -9,7 +9,7 @@ public class Spot {
 	private static int id = 0;
     private double x;
     private double y;
-    private final double size = 60; // Fixed size, do not change
+    private final double size = 50; // Fixed size, do not change
 	
     // TODO: Document this function
 	public Spot(double x, double y, String type, GraphicsContext gc) {
