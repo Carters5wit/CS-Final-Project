@@ -20,7 +20,6 @@ public class Spot {
         
         boolean square = true;
         Color fillColor = Color.WHITE;
-        Color outlineColor = Color.BLACK;
         
         switch (type) {
         	case "neutral":
@@ -33,7 +32,7 @@ public class Spot {
                 // Draw a circular spot
                 square = false;
                 gc.setFill(fillColor);
-                gc.setStroke(outlineColor);
+                gc.setStroke(Color.BLACK);
                 gc.fillOval(centerX - radius, centerY - radius, size, size);
                 gc.strokeOval(centerX - radius, centerY - radius, size, size);
                 break;
@@ -42,7 +41,7 @@ public class Spot {
         
         if (square) {
         	gc.setFill(fillColor);
-            gc.setStroke(outlineColor);
+            gc.setStroke(Color.BLACK);
             gc.fillRect(x, y, size, size);
             gc.strokeRect(x, y, size, size);
         }
@@ -64,6 +63,14 @@ public class Spot {
 	// TODO: Document this function
 	public int getID() {
 		return id;
+	}
+	
+	public void setHomeStrechColor(Color clr) {
+		gc.setFill(clr);
+		gc.setStroke(Color.BLACK);
+		gc.clearRect(x, y, size, size);
+		gc.fillRect(x,y,size,size);
+		gc.strokeRect(x, y, size, size);
 	}
 	
 	// TODO: Document this function
