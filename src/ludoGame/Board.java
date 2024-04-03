@@ -16,12 +16,26 @@ public class Board {
     private int[][] stretchOrange = {{1,7},{2,7},{3,7},{4,7},{5,7}};
     private int[][] stretchYellow = {{13,7},{12,7},{11,7},{10,7},{9,7}};
     private int[][] stretchGreen = {{7,13},{7,12},{7,11},{7,10},{7,9}};
+    private int[][][] stretches = {stretchBlue, stretchOrange, stretchYellow, stretchGreen};
+    
+    // Coordinates for each player's home base
+    private int[][] homesBlue = {{2,2}, {2,4}, {4,2}, {4,4}};
+    private int[][] homesOrange = {{2,10}, {2,12}, {4,10}, {4,12}};
+    private int[][] homesYellow = {{10,2}, {10,4}, {12,2}, {12,4}};
+    private int[][] homesGreen = {{10,10}, {10,12}, {12,10}, {12,12}};
+    private int[][][] homes = {homesBlue, homesOrange, homesYellow, homesGreen};
     
     // Coordinates for each player's start
     private int[] startBlue = {6,1};
     private int[] startOrange = {1,8};
     private int[] startGreen = {8,13};
     private int[] startYellow = {13,6};
+    
+    // Color for each player
+    private Color blue = Color.rgb(54, 103, 181);
+    private Color orange = Color.rgb(237, 117, 19);
+    private Color yellow = Color.rgb(245, 223, 27);
+    private Color green = Color.rgb(55, 138, 45);
     
     // Defined segments of the board
     
@@ -98,6 +112,70 @@ public class Board {
                 spots[i][j] = new Spot(x, y, gc);
             }
         }
+        
+        // Change color of home stretch spots
+        for (int z = 0; z < stretches.length; z++) {
+        	int[][] stretch = stretches[z];
+        	for (int[] coord : stretch) {
+            	int i = coord[0];
+            	int j = coord[1];
+            	
+            	if (z == 0) {
+            		spots[i][j].setHomeStrechColor(blue);
+            	} else if (z == 1) {
+            		spots[i][j].setHomeStrechColor(orange);
+            	} else if (z == 2) {
+            		spots[i][j].setHomeStrechColor(yellow);
+            	} else if (z == 3) {
+            		spots[i][j].setHomeStrechColor(green);
+            	}
+            	
+            }
+        }
+        
+        // Create circles on homes
+        for (int i = 0; i < 4; i++) {
+        	Color c = Color.WHITE;
+        	double centerX = 0;
+        	double centerY = 0;
+        	
+        	if (i == 0) {
+        		c = blue;
+        		centerX = 3 * gapX;
+        		centerY = 3 * gapY;
+        	} else if (i == 1) {
+        		c = orange;
+        		centerX = 11 * gapX;
+        		centerY = 3 * gapY;
+        	} else if (i == 2) {
+        		c = yellow;
+        		centerX = 3 * gapX;
+        		centerY = 11 * gapY;
+        	} else if (i == 3) {
+        		c = green;
+        		centerX = 11 * gapX;
+        		centerY = 11 * gapY;
+        	}
+        	
+            gc.setFill(c);
+            gc.setStroke(Color.BLACK);
+            double radius = 75;
+            double size = 200;
+            gc.fillOval(centerX - radius, centerY - radius, size, size);
+            gc.strokeOval(centerX - radius, centerY - radius, size, size);
+        }
+        
+        // Create home spots
+        for (int z = 0; z < homes.length; z++) {
+        	int[][] homeSpots = homes[z];
+        	for (int[] coords : homeSpots) {
+        		double x = coords[0] * gapX;
+                double y = coords[1] * gapY;
+        		new Spot(x, y, "home", gc);
+        	}
+        }
+        
+
     }
     
     public GraphicsContext getGraphicsContext() {
