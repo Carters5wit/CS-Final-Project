@@ -3,7 +3,12 @@ package ludoGame;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-
+/**
+ * Responsible for drawing the primary Ludo board to the window and handling board-related
+ * logic.
+ * 
+ * @author Reggie Andrade
+ */
 public class Board {
     private Canvas canvas;
     private GraphicsContext gc;
@@ -68,16 +73,40 @@ public class Board {
     };
     
     
-
+    
+    /**
+     * Creates and draws a new board object, 
+     * which can be added to a window root.
+     * 
+     * @param width the width of the board
+     * @param height the height of the board
+     */
     public Board(double width, double height) {
         canvas = new Canvas(width, height);
         drawBoard();
     }
-
+    
+    /**
+     * Returns the canvas object of the board.
+     * 
+     * @return canvas object
+     */
     public Canvas getCanvas() {
         return canvas;
     }
-
+    
+    /**
+     * Returns the GraphicsContext object of the board.
+     * 
+     * @return graphicscontext object
+     */
+    public GraphicsContext getGraphicsContext() {
+    	return gc;
+    }
+    
+    /**
+     * Draws all elements of the Ludo board onto the canvas. Internal use only.
+     */
     public void drawBoard() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         // Draw the board here
@@ -176,9 +205,5 @@ public class Board {
         }
         
 
-    }
-    
-    public GraphicsContext getGraphicsContext() {
-    	return gc;
     }
 }
