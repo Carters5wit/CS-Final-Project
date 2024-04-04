@@ -200,7 +200,7 @@ public class Board {
         	for (int[] coords : homeSpots) {
         		double x = coords[0] * gapX;
                 double y = coords[1] * gapY;
-        		new Spot(x, y, "home", gc);
+        		spots[coords[0]][coords[1]] = new Spot(x, y, "home", gc);
         	}
         }
         

@@ -70,20 +70,20 @@ public class Spot {
        gc.strokeRect(x, y, size, size);
 	}
 	public void addArrow(int angle) {
-		Image img = new Image("src/images/plain-arrow.png");
-       ImageView arrow = new ImageView(img);
-       arrow.setX(x);
-       arrow.setY(y);
-      
-      
-       Rotate r = new Rotate();
-       r.setAngle(angle);
-       r.setPivotX(img.getWidth()/2);
-       r.setPivotY(img.getHeight()/2);
-       arrow.getTransforms().add(r);
-      
-      
-      
+	    Image img = new Image("file:src/images/plain-arrow.png");
+
+	    gc.save(); // Save the current state of the graphics context
+	    gc.translate(x + size/2, y + size/2);
+	    gc.rotate(angle);
+	    
+	    double scale = 0.1;
+	    
+	    double scaledWidth = img.getWidth() * scale;
+	    double scaledHeight = img.getHeight() * scale;
+
+	    gc.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
+
+	    gc.restore(); // Restore the saved state (removes the translation and rotation)
 	}
 	
 	// TODO: Document this function
