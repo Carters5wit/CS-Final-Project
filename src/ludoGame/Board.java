@@ -76,7 +76,38 @@ public class Board {
     		{8,0}, {7,0}, {6,0},
     };
     
+    /**
+     * Combines several segment arrays into one array, internal use only.
+     * 
+     * @param segments
+     * @return combined 2D array
+     */
+    private int[][] combineSegments(int[][]... segments) {
+        // Calculate total length
+        int totalLength = 0;
+        for (int[][] segment : segments) {
+            totalLength += segment.length;
+        }
+        // Exclude the last element of the last segment
+        totalLength--;
+
+        int[][] combinedSegments = new int[totalLength][2];
+        int index = 0;
+
+        // Combine segments
+        for (int[][] segment : segments) {
+            for (int i = 0; i < segment.length - 1; i++) {
+                combinedSegments[index++] = segment[i];
+            }
+        }
+
+        return combinedSegments;
+    }
     
+    private int[][] bluePath = combineSegments(segment1, segment2, segment3, segment4);
+    private int[][] orangePath = combineSegments(segment2, segment3, segment4, segment1);
+    private int[][] greenPath = combineSegments(segment3, segment4, segment1, segment2);
+    private int[][] yellowPath = combineSegments(segment4, segment1, segment2, segment3);
     
     /**
      * Creates and draws a new board object, 
@@ -115,6 +146,28 @@ public class Board {
      */
     public Spot[][] getSpots() {
     	return spots;
+    }
+    
+    /**
+     * Returns an array of coordinates which define the order which
+     * each team's pawn should move
+     * 
+     * @param team the team (player) path to get
+     * @return team path
+     */
+    public int[][] getPath(int team) {
+    	switch (team) {
+    		case 1:
+    			return bluePath;
+    		case 2:
+    			return orangePath;
+    		case 3:
+    			return greenPath;
+    		case 4:
+    			return yellowPath;
+    		default:
+    			return null;
+    	}
     }
     
     /**
