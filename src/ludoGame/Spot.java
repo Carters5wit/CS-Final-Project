@@ -48,7 +48,7 @@ public class Spot {
                break;
        	case "safe":
        		normal = false;
-       		Image img = new Image("file:src/images/plain-arrow.png");
+       		Image img = new Image("file:src/images/staryu.png");
        		double scale = 0.1;	    
     	    double scaledWidth = img.getWidth() * scale;
     	    double scaledHeight = img.getHeight() * scale;
