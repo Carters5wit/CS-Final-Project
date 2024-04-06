@@ -18,7 +18,7 @@ public class Pawn {
 		this.spot = spot;
 		this.player = player;
 	}
-	
+	//it do
 	public boolean occupied(Spot spot) {
 		if(this.spot == spot){
 			occ =true;
