@@ -89,7 +89,7 @@ public class Spot {
 	    gc.translate(x + size/2, y + size/2);
 	    gc.rotate(angle);
 	    
-	    double scale = 0.1;
+	    double scale = 0.06;
 	    
 	    double scaledWidth = img.getWidth() * scale;
 	    double scaledHeight = img.getHeight() * scale;
@@ -105,7 +105,7 @@ public class Spot {
 	    gc.save(); // Save the current state of the graphics context
 	    gc.translate(x + size/2, y + size/2);
 	    
-	    double scale = 0.1;
+	    double scale = 0.06;
 	    
 	    double scaledWidth = img.getWidth() * scale;
 	    double scaledHeight = img.getHeight() * scale;
