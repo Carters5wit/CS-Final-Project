@@ -45,7 +45,20 @@ public class Spot {
                gc.setStroke(Color.BLACK);
                gc.fillRect(x, y, size, size);
                gc.strokeRect(x, y, size, size);
-            
+               break;
+       	case "safe":
+       		normal = false;
+       		Image img = new Image("file:src/images/plain-arrow.png");
+       		double scale = 0.1;	    
+    	    double scaledWidth = img.getWidth() * scale;
+    	    double scaledHeight = img.getHeight() * scale;
+    	    gc.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
+    	    gc.restore();
+    	    gc.setFill(fillColor);
+            gc.setStroke(Color.BLACK);
+            gc.fillRect(x, y, size, size);
+            gc.strokeRect(x, y, size, size);
+    	    
        	
        }
       
