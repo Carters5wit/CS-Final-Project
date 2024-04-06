@@ -20,7 +20,7 @@ public class Pawn {
 			this.color="Yellow";
 			break;
 		case 4:
-			this.color="Green";
+			this.color="";
 			break;
 		}
 	}
