@@ -143,6 +143,15 @@ public class Spot {
 		return type;
 	}
 	
+	/**
+	 * Gets the size of each spot
+	 * 
+	 * @return size the size of the spot
+	 */
+	public double getSize() {
+		return size;
+	}
+	
 	// TODO: Document this function
 	public void setType(String type) {
 		this.type = type;
