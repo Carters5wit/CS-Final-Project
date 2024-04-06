@@ -6,6 +6,7 @@ public class Pawn {
 	private Spot spot; // Current spot of the pawn
 	private int player = 0;
 	private final int PAWN_NUM = 4; // Number of pawns on each team
+	private boolean occ =false;
 	
 	// Pawn images
 	private Image blue = new Image("file:src/images/blue.png");
@@ -17,6 +18,19 @@ public class Pawn {
 		this.spot = spot;
 		this.player = player;
 	}
+	
+	public boolean occupied(Spot spot) {
+		if(this.spot == spot){
+			occ =true;
+		}
+		return occ;
+	}
+	
+	public void eaten(Spot spot) {
+		
+	}
+	
+	
 		
 	/**
 	 * Get the spot the pawn resides on
