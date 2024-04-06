@@ -171,6 +171,33 @@ public class Board {
     }
     
     /**
+     * Get the home stretch for each team (player)
+     * 
+     * @return stretches the home stretches for each team (player), in order
+     */
+    public int[][][] getStretches() {
+    	return stretches;
+    }
+    
+    /**
+     * Get the homes for each team (player)
+     * 
+     * @return homes home positions for each player
+     */
+    public int[][][] getHomes() {
+    	return homes;
+    }
+    
+    /**
+     * Get the starts for each team (player)
+     * 
+     * @return starts start positions for each player
+     */
+    public int[][] getStarts() {
+    	return starts;
+    }
+    
+    /**
      * Draws all elements of the Ludo board onto the canvas. Internal use only.
      */
     public void drawBoard() {
