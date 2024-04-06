@@ -48,7 +48,7 @@ public class Spot {
                break;
        	case "safe":
        		normal = false;
-       		Image img = new Image("file:src/images/staryu.png");
+       		Image img = new Image("file:src/images/polar-star.png");
        		double scale = 0.1;	    
     	    double scaledWidth = img.getWidth() * scale;
     	    double scaledHeight = img.getHeight() * scale;
@@ -99,6 +99,22 @@ public class Spot {
 	    gc.restore(); // Restore the saved state (removes the translation and rotation)
 	}
 	
+	public void addStar() {
+		Image img = new Image("file:src/images/polar-star.png");
+
+	    gc.save(); // Save the current state of the graphics context
+	    gc.translate(x + size/2, y + size/2);
+	    
+	    double scale = 0.1;
+	    
+	    double scaledWidth = img.getWidth() * scale;
+	    double scaledHeight = img.getHeight() * scale;
+
+	    gc.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
+
+	    gc.restore(); // Restore the saved state (removes the translation and rotation)
+	}
+	
 	// TODO: Document this function
 	public int getID() {
 		return id;
@@ -129,6 +145,7 @@ public class Spot {
 	
 	// TODO: Document this function
 	public void setType(String type) {
+		this.type = type;
 		// TODO: Set type based on keywords, throwing error for invalid type.
 		// Tip: Use gc.clearRect to replace a shape, use switch cases from constructor.
 	}

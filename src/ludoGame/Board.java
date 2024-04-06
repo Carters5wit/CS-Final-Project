@@ -2,6 +2,7 @@ package ludoGame;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 /**
  * Responsible for drawing the primary Ludo board to the window and handling board-related
@@ -35,6 +36,9 @@ public class Board {
     private int[] startOrange = {1,8};
     private int[] startGreen = {8,13};
     private int[] startYellow = {13,6};
+    private int[][] starts = {startBlue, startOrange, startGreen, startYellow};
+    
+    private int[][] safes = {{8,2},{2,6},{6,12},{12,8}};
     
     // Color for each player
     private Color blue = Color.rgb(54, 103, 181);
@@ -105,10 +109,19 @@ public class Board {
     }
     
     /**
+     * Returns a two-dimensional array of all spots on the board.
+     * 
+     * @return spot 2D array
+     */
+    public Spot[][] getSpots() {
+    	return spots;
+    }
+    
+    /**
      * Draws all elements of the Ludo board onto the canvas. Internal use only.
      */
     public void drawBoard() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
         // Draw the board here
         gc.setFill(Color.rgb(239, 193, 135));
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -204,6 +217,52 @@ public class Board {
         	}
         }
         
+        // Change start spots
+        for (int i = 0; i < starts.length; i++) {
+        	int[] start = starts[i];
+        	Color clr = null;
+        	int ang = 0;
+        	
+        	switch (i) {
+        		case 0:
+        			clr = blue;
+        			ang = 270;
+        			break;
+        		case 1:
+        			clr = orange;
+        			break;
+        		case 2:
+        			clr = green;
+        			ang = 90;
+        			break;
+        		case 3:
+        			clr = yellow;
+        			ang = 180;
+        			break;
+        	}
+        	
+        	spots[start[0]][start[1]].setHomeStrechColor(clr);
+        	spots[start[0]][start[1]].addArrow(ang);
+        	spots[start[0]][start[1]].setType("start");
+        }
+        
+     // Change safe spots
+        for (int i = 0; i < safes.length; i++) {
+        	int[] safe = safes[i];
+ 
+        	spots[safe[0]][safe[1]].addStar();
+        	spots[safe[0]][safe[1]].setType("safe");
+        }
+        
+        // Draw the center image
+        Image center = new Image("file:src/images/midboard.png");
+	    gc.save(); // Save the current state of the graphics context
+	    gc.translate(375, 375);
+	    double scale = 0.3;
+	    double scaledWidth = center.getWidth() * scale;
+	    double scaledHeight = center.getHeight() * scale;
+	    gc.drawImage(center, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
+	    gc.restore(); // Restore the saved state (removes the translation and rotation)
 
     }
 }
