@@ -1,37 +1,39 @@
 package ludoGame;
 
+import javafx.scene.image.Image;
+
 public class Pawn {
-	private int[] pos = new int[2];
-	private int player =0;
-	private int pawnnum = 4;
-	private String color;
+	private Spot spot; // Current spot of the pawn
+	private int player = 0;
+	private final int PAWN_NUM = 4; // Number of pawns on each team
 	
-	public Pawn(int[] spot, int player) {
-		this.pos= spot;
-		this.player=player;
-		switch (player) {
-		case 1:
-			this.color= "Blue";
-			break;
-		case 2:
-			this.color="Orange";
-			break;
-		case 3:
-			this.color="Yellow";
-			break;
-		case 4:
-			this.color="Green";
-			break;
-		}
+	// Pawn images
+	private Image blue = new Image("file:src/images/blue.png");
+	private Image orange = new Image("file:src/images/orange.png");
+	private Image yellow = new Image("file:src/images/yellow.png");
+	private Image green = new Image("file:src/images/green.png");
+	
+	public Pawn(Spot spot, int player) {
+		this.spot = spot;
+		this.player = player;
 	}
 		
-	
-	public int[] returnPosition() {
-		return pos;
+	/**
+	 * Get the spot the pawn resides on
+	 * 
+	 * @return spot the pawn is currently on
+	 */
+	public Spot returnSpot() {
+		return spot;
 	}
 	
-	public String pawnColor() {
-		return color;
+	/**
+	 * Get the color (player) of the pawn
+	 * 
+	 * @return player 
+	 */
+	public int pawnColor() {
+		return player;
 	}
 	
 
