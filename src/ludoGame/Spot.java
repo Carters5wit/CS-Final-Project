@@ -58,7 +58,10 @@ public class Spot {
             gc.setStroke(Color.BLACK);
             gc.fillRect(x, y, size, size);
             gc.strokeRect(x, y, size, size);
-    	    
+    	    break;
+       	case "final":
+       		normal = false;
+       		break;
        	
        }
       
