@@ -1,7 +1,13 @@
 package ludoGame;
 
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 
 public class Pawn {
 	private GraphicsContext gc;
@@ -9,7 +15,7 @@ public class Pawn {
 	private int player = 0;
 	private final int PAWN_NUM = 4; // Number of pawns on each team
 	private boolean occ =false;
-	
+	private Label forClicks = new Label("");
 	// Pawn images
 	private Image blue = new Image("file:src/images/blue.png");
 	private Image orange = new Image("file:src/images/orange.png");
@@ -61,7 +67,32 @@ public class Pawn {
 		
 	}
 	
+	public void spotClicked() {
+		Label clickable = spot.returnLabel();
+		
+		clickable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Spot moveTo= new Spot(spot.getX(), spot.getY(), gc);
+                updateSpot(moveTo);
+            }
+            
+        });
+		
+	}
 	
+	public void updateSpot(Spot newer) {
+		this.spot = newer;
+	}
+	public void pawnClicked() {
+		forClicks.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+               // .spotclicked();
+            }
+            
+        });
+	}
 		
 	/**
 	 * Get the spot the pawn resides on

@@ -1,4 +1,6 @@
 package ludoGame;
+import  javafx.scene.control.Label;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
@@ -10,7 +12,7 @@ public class Spot {
 	private static int id = 0;
    private double x;
    private double y;
-  
+  private Label forClicks = new Label("");
    private final double size = 50; // Fixed size, do not change
   
 	
@@ -20,7 +22,7 @@ public class Spot {
 		this.x = x;
        this.y = y;
        this.type = type;
-      
+       
        boolean normal = true;
        Color fillColor = Color.WHITE;
       
@@ -70,6 +72,8 @@ public class Spot {
            gc.setStroke(Color.BLACK);
            gc.fillRect(x, y, size, size);
            gc.strokeRect(x, y, size, size);
+           forClicks.setLayoutX(x + size/2);
+           forClicks.setLayoutY(y + size/2);
        }
 	}
 	
@@ -161,6 +165,8 @@ public class Spot {
 		// TODO: Set type based on keywords, throwing error for invalid type.
 		// Tip: Use gc.clearRect to replace a shape, use switch cases from constructor.
 	}
-	
+	public Label returnLabel() {
+		return forClicks;
+	}
 }
 
