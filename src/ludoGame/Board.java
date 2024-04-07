@@ -38,6 +38,12 @@ public class Board {
     private int[] startYellow = {13,6};
     private int[][] starts = {startBlue, startOrange, startGreen, startYellow};
     
+    private int[] finalBlue = {7,6};
+    private int[] finalOrange = {6,7};
+    private int[] finalGreen = {7,8};
+    private int[] finalYellow = {8,7};
+    private int[][] finals = {finalBlue, finalOrange, finalGreen, finalYellow};
+    
     private int[][] safes = {{8,2},{2,6},{6,12},{12,8}};
     
     // Color for each player
@@ -326,7 +332,7 @@ public class Board {
         	spots[start[0]][start[1]].setType("start");
         }
         
-     // Change safe spots
+        // Change safe spots
         for (int i = 0; i < safes.length; i++) {
         	int[] safe = safes[i];
  
@@ -344,5 +350,14 @@ public class Board {
 	    gc.drawImage(center, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
 	    gc.restore(); // Restore the saved state (removes the translation and rotation)
 
+	    // Making invisible final spots
+        for (int i = 0; i < finals.length; i++) {
+        	int[] coords = finals[i];
+        	
+        	double x = coords[0] * gapX;
+            double y = coords[1] * gapY;
+        	
+        	spots[coords[0]][coords[1]] = new Spot(x, y, "final", gc);
+        }
     }
 }
