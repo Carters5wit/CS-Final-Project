@@ -75,7 +75,7 @@ public class Main extends Application {
     	menu.show();
 
         // Load the background image
-        Image backgroundImage = new Image("file:src/images/ludo.jpg"); // Adjust the path as needed
+        Image backgroundImage = new Image("file:src/images/ludo2.png"); // Adjust the path as needed
 
         // Create a background image
         BackgroundImage backgroundImg = new BackgroundImage(backgroundImage,
