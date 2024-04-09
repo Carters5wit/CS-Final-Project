@@ -6,7 +6,13 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -67,19 +73,43 @@ public class Main extends Application {
     	Scene menuScene = new Scene(menuRoot, 600, 350);
     	menu.setScene(menuScene);
     	menu.show();
-    	
+
+        // Load the background image
+        Image backgroundImage = new Image("file:src/images/ludo.jpg"); // Adjust the path as needed
+
+        // Create a background image
+        BackgroundImage backgroundImg = new BackgroundImage(backgroundImage,
+                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
+
+        // Create a background with the image
+        Background background = new Background(backgroundImg);
+
+        // Set the background to the menuRoot
+        menuRoot.setBackground(background);
     	// Button creation
     	Button playButton = new Button("Play Ludo!");
     	addToParent(playButton, menuRoot); // Add button to menuRoot
-    	playButton.setTranslateX(-200); // Change X
+    	playButton.setTranslateX(0); // Change X
     	playButton.setTranslateY(-100); // Change Y
     	playButton.setPrefSize(100, 50); // Change size (all buttons should be this size)
+    	
+    	//Exit Button
+    	Button exitButton = new Button("Exit");
+    	addToParent(exitButton, menuRoot);
+    	exitButton.setTranslateX(0);
+    	exitButton.setTranslateY(0);
+    	exitButton.setPrefSize(100, 50);
     	
     	// When play button is pressed...
     	playButton.setOnAction(e -> {
     		menu.close(); // Close the main menu
     		primaryStage.setScene(sc); // Set the Ludo game scene
     		primaryStage.show(); // Show the Ludo game stage
+    		
+    		//exit button is pressed...
+    		exitButton.setOnAction(event -> System.exit(0));
+    		menu.close();
     	});
     	
     	// TODO: Create exit button to close the main menu and exit the program
