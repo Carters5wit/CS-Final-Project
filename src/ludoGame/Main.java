@@ -20,6 +20,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -218,7 +219,8 @@ public class Main extends Application {
    			helpStage.show();
    			Label instruction1 = new Label("1. Place your 4 pieces in the corner of the same color");
    			Label instruction2 = new Label("2. Blue always goes first (Blue, Orange, Green, Yellow)");
-   			Label instruction3 = new Label("3. Roll a 6 to move a piece out of your base onto the main track(End your turn after moving a piece if you didn’t roll a 6)");
+   			Label instruction3 = new Label("3. Roll a 6 to move a piece out of your base onto the main track");
+   			Label instruction = new Label("(End your turn after moving a piece if you didn’t roll a 6)");
    			Label instruction4 = new Label("4. Roll the die to move a piece during each of your turns");
    			Label instruction5 = new Label("5. Land in a space with an opponent's piece to send it back to their base");
    			Label instruction6 = new Label("6. Move onto the same space as one of your pieces to make a block");
@@ -226,10 +228,26 @@ public class Main extends Application {
    			Label instruction8 = new Label("8. Move your pieces into your home column once you go around the board");
    			Label instruction9 = new Label("9. Roll the exact number you need to get pieces into the finishing square");
    			Label instruction10 = new Label("10. Win the game by moving all 4 of your pieces to the finishing square");
-   		
+   			instruction1.setTextFill(Color.WHITE);
+            instruction2.setTextFill(Color.WHITE);
+            instruction3.setTextFill(Color.WHITE);
+            instruction.setTextFill(Color.WHITE);
+            instruction4.setTextFill(Color.WHITE);
+            instruction5.setTextFill(Color.WHITE);
+            instruction6.setTextFill(Color.WHITE);
+            instruction7.setTextFill(Color.WHITE);
+            instruction8.setTextFill(Color.WHITE);
+            instruction9.setTextFill(Color.WHITE);
+            instruction10.setTextFill(Color.WHITE);
+   		 Button helpBackButton = new Button("Back");
+         helpLayout.getChildren().add(helpBackButton);
+         helpBackButton.setOnAction(event -> {
+             helpStage.close();
+             menu.show();
+         });
           
            // Add instructions to layout
-           helpLayout.getChildren().addAll(instruction1, instruction2, instruction3, instruction4, instruction5, instruction6, instruction7, instruction8, instruction9, instruction10);
+           helpLayout.getChildren().addAll(instruction1, instruction2, instruction3, instruction, instruction4, instruction5, instruction6, instruction7, instruction8, instruction9, instruction10);
            helpLayout.setBackground(background2);
    	});
    	exitButton.setOnAction(event -> Platform.exit());
