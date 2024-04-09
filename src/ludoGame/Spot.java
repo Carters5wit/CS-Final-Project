@@ -39,6 +39,8 @@ public class Spot {
                gc.setStroke(Color.BLACK);
                gc.fillOval(centerX - radius, centerY - radius, size, size);
                gc.strokeOval(centerX - radius, centerY - radius, size, size);
+               forClicks.setLayoutX(x + size/2);
+               forClicks.setLayoutY(y + size/2);
                break;
        	// TODO: Write the rest of the switch case statements
        	case "start":
@@ -60,9 +62,13 @@ public class Spot {
             gc.setStroke(Color.BLACK);
             gc.fillRect(x, y, size, size);
             gc.strokeRect(x, y, size, size);
+            forClicks.setLayoutX(x + size/2);
+            forClicks.setLayoutY(y + size/2);
     	    break;
        	case "final":
        		normal = false;
+       		forClicks.setLayoutX(x + size/2);
+            forClicks.setLayoutY(y + size/2);
        		break;
        	
        }
@@ -88,6 +94,8 @@ public class Spot {
        gc.setStroke(Color.BLACK);
        gc.fillRect(x, y, size, size);
        gc.strokeRect(x, y, size, size);
+       forClicks.setLayoutX(x + size/2);
+       forClicks.setLayoutY(y + size/2);
 	}
 	public void addArrow(int angle) {
 	    Image img = new Image("file:src/images/plain-arrow.png");
@@ -165,8 +173,13 @@ public class Spot {
 		// TODO: Set type based on keywords, throwing error for invalid type.
 		// Tip: Use gc.clearRect to replace a shape, use switch cases from constructor.
 	}
+	
 	public Label returnLabel() {
 		return forClicks;
+	}
+	
+	public String toString() {
+		return "Spot (" + x + ", " + y + ")";
 	}
 }
 
