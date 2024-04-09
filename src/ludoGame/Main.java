@@ -7,9 +7,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -78,11 +76,12 @@ public class Main extends Application {
         
         // Set up event handler to detect clicks on pawns
         for (Pawn[] teamPawns : pawns) {
-        	for (Pawn pawn : teamPawns) {
-                pawn.getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+        	for (int i = 0; i < teamPawns.length; i++) {
+        		final int index = i; // Final variable capturing the current value of i
+                teamPawns[i].getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        System.out.println("Pawn clicked! Player: " + pawn.pawnColor());
+                        System.out.println("Pawn clicked! Player: " + teamPawns[index].pawnColor() + " | ID: " + (index+1));
                         // TODO: Perform pawn click logic
                     }
                 });
