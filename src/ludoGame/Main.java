@@ -105,12 +105,17 @@ public class Main extends Application {
 	   	menu.show();
        // Load the background image
        Image backgroundImage = new Image("file:src/images/ludo2.png"); // Adjust the path as needed
+       Image backgroundImage2 = new Image("file:src/images/ludoinstructions2 (Custom).png");
        // Create a background image
        BackgroundImage backgroundImg = new BackgroundImage(backgroundImage,
                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
+       BackgroundImage backgroundImg2 = new BackgroundImage(backgroundImage2,
+    		   BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
+    		   new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false));
        // Create a background with the image
        Background background = new Background(backgroundImg);
+       Background background2 = new Background(backgroundImg2);
        // Set the background to the menuRoot
        menuRoot.setBackground(background);
 	   	// Button creation
@@ -140,22 +145,26 @@ public class Main extends Application {
            VBox playerSelectionLayout = new VBox(20);
            playerSelectionLayout.setAlignment(Pos.CENTER);
            // Create buttons for player selection
+           
            Button twoPlayersButton = new Button("2 Players");
            twoPlayersButton.setTranslateX(-100);
-       	twoPlayersButton.setTranslateY(35);
-           twoPlayersButton.setPrefSize(80, 5);
+       	twoPlayersButton.setTranslateY(85);
+           twoPlayersButton.setPrefSize(120, 80);
+           
            Button threePlayersButton = new Button("3 Players");
            threePlayersButton.setTranslateX(100);
        	threePlayersButton.setTranslateY(-10);
-           threePlayersButton.setPrefSize(80, 5);
+           threePlayersButton.setPrefSize(120, 80);
+           
            Button fourPlayersButton = new Button("4 Players");
            fourPlayersButton.setTranslateX(-100);
-       	fourPlayersButton.setTranslateY(10);
-           fourPlayersButton.setPrefSize(80, 5);
+       	fourPlayersButton.setTranslateY(57);
+           fourPlayersButton.setPrefSize(120, 80);
+           
            Button backButton = new Button("Back");
            backButton.setTranslateX(100);
        	backButton.setTranslateY(-35);
-           backButton.setPrefSize(80, 5);
+           backButton.setPrefSize(120, 80);
            // Add buttons to the layout
            playerSelectionLayout.getChildren().addAll(twoPlayersButton,threePlayersButton, fourPlayersButton, backButton);
            playerSelectionLayout.setBackground(background);
@@ -188,8 +197,8 @@ public class Main extends Application {
            	menu.show();
            });
            
-   		//exit button is pressed...
-   		Scene playerSelectionScene = new Scene(playerSelectionLayout, 400, 200);
+   		//exit button is pressed...400,200
+   		Scene playerSelectionScene = new Scene(playerSelectionLayout, 600, 350);
            playerSelectionStage.setScene(playerSelectionScene);
            playerSelectionStage.show();
    		});
@@ -204,7 +213,7 @@ public class Main extends Application {
    			scrollPane.setContent(helpLayout);
    			scrollPane.setFitToWidth(true);
    			scrollPane.setFitToHeight(true);
-   			Scene helpScene = new Scene(scrollPane, 400, 300);
+   			Scene helpScene = new Scene(scrollPane, 600, 350);
    			helpStage.setScene(helpScene);
    			helpStage.show();
    			Label instruction1 = new Label("1. Place your 4 pieces in the corner of the same color");
@@ -217,9 +226,11 @@ public class Main extends Application {
    			Label instruction8 = new Label("8. Move your pieces into your home column once you go around the board");
    			Label instruction9 = new Label("9. Roll the exact number you need to get pieces into the finishing square");
    			Label instruction10 = new Label("10. Win the game by moving all 4 of your pieces to the finishing square");
+   		
           
            // Add instructions to layout
            helpLayout.getChildren().addAll(instruction1, instruction2, instruction3, instruction4, instruction5, instruction6, instruction7, instruction8, instruction9, instruction10);
+           helpLayout.setBackground(background2);
    	});
    	exitButton.setOnAction(event -> Platform.exit());
    	
