@@ -1,10 +1,15 @@
 package ludoGame;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -22,14 +27,20 @@ public class Main extends Application {
         GraphicsContext gc = board.getGraphicsContext();
         root.getChildren().add(board.getCanvas());
         
+        // Create a Pane for pawns and overlay it on top of the board
+        Pane pawnPane = new Pane();
+        root.getChildren().add(pawnPane);
+        
         // Set scene size and show to screen
-        primaryStage.setScene(new Scene(root, 750, 750));
+        Scene sc = new Scene(root, 750, 750);
+        primaryStage.setScene(sc);
         primaryStage.show();
         
         
         // Get spots on the board
         Spot[][] spots = board.getSpots();
         int[][][] homes = board.getHomes();
+        int[][] bluePath = board.getPath(0);
         
         // Initialize pawn arrays
         Pawn[] bluePawns = new Pawn[4];
@@ -59,10 +70,24 @@ public class Main extends Application {
 
             for (int i = 0; i < teamHomes.length; i++) {
                 int[] coords = teamHomes[i];
-                currentPawns[i] = new Pawn(spots[coords[1]][coords[0]], z+1, gc); 
+                currentPawns[i] = new Pawn(spots[coords[1]][coords[0]], z + 1, pawnPane);
             }
         }
-
+        
+        Pawn[][] pawns = {bluePawns, orangePawns, yellowPawns, greenPawns};
+        
+        // Set up event handler to detect clicks on pawns
+        for (Pawn[] teamPawns : pawns) {
+        	for (Pawn pawn : teamPawns) {
+                pawn.getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent event) {
+                        System.out.println("Pawn clicked! Player: " + pawn.pawnColor());
+                        // TODO: Perform pawn click logic
+                    }
+                });
+            }
+        }
         
     }
 }
