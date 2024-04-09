@@ -1,35 +1,36 @@
 package ludoGame;
-import  javafx.scene.control.Label;
+
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
+import javafx.scene.shape.Rectangle;
+
 public class Spot {
 	private String type;
-	private GraphicsContext gc;
+	private Pane p;
 	private static int id = 0;
-   private double x;
-   private double y;
-  private Label forClicks = new Label("");
-   private final double size = 50; // Fixed size, do not change
+	private double x;
+	private double y;
+	private ImageView gradient; // ImageView to display the spot gradient
+	private Rectangle r;
+	private final double size = 50; // Fixed size, do not change
   
 	
    // TODO: Document this function
 	public Spot(double x, double y, String type, GraphicsContext gc) {
 		id++;
 		this.x = x;
-       this.y = y;
-       this.type = type;
+		this.y = y;
+		this.type = type;
        
-       boolean normal = true;
-       Color fillColor = Color.WHITE;
+		boolean normal = true;
+		Color fillColor = Color.WHITE;
       
-       switch (type) {
-       	case "neutral":
-       		break;
-       	case "home":
+		switch (type) {
+       		case "home":
                double radius = size / 2.0;
                double centerX = x + radius;
                double centerY = y + radius;
@@ -39,95 +40,62 @@ public class Spot {
                gc.setStroke(Color.BLACK);
                gc.fillOval(centerX - radius, centerY - radius, size, size);
                gc.strokeOval(centerX - radius, centerY - radius, size, size);
-               forClicks.setLayoutX(x + size/2);
-               forClicks.setLayoutY(y + size/2);
                break;
-       	// TODO: Write the rest of the switch case statements
-       	case "start":
-       		
-       		gc.setFill(fillColor);
-               gc.setStroke(Color.BLACK);
-               gc.fillRect(x, y, size, size);
-               gc.strokeRect(x, y, size, size);
-               break;
-       	case "safe":
-       		normal = false;
-       		Image img = new Image("file:src/images/polar-star.png");
-       		double scale = 0.1;	    
-    	    double scaledWidth = img.getWidth() * scale;
-    	    double scaledHeight = img.getHeight() * scale;
-    	    gc.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
-    	    gc.restore();
-    	    gc.setFill(fillColor);
-            gc.setStroke(Color.BLACK);
-            gc.fillRect(x, y, size, size);
-            gc.strokeRect(x, y, size, size);
-            forClicks.setLayoutX(x + size/2);
-            forClicks.setLayoutY(y + size/2);
-    	    break;
-       	case "final":
-       		normal = false;
-       		forClicks.setLayoutX(x + size/2);
-            forClicks.setLayoutY(y + size/2);
-       		break;
+       		case "final":
+       			normal = false;
+       			break;
        	
        }
       
-       if (normal) {
-       	gc.setFill(fillColor);
-           gc.setStroke(Color.BLACK);
-           gc.fillRect(x, y, size, size);
-           gc.strokeRect(x, y, size, size);
-           forClicks.setLayoutX(x + size/2);
-           forClicks.setLayoutY(y + size/2);
+		if (normal) {
+			gc.setFill(fillColor);
+			gc.setStroke(Color.BLACK);
+			gc.fillRect(x, y, size, size);
+			gc.strokeRect(x, y, size, size);
        }
 	}
 	
 	// TODO: Document this function
-	public Spot(double x, double y, GraphicsContext gc) {
+	public Spot(double x, double y, Pane p) {
 		id++;
 		this.x = x;
-       this.y = y;
-       this.gc = gc;
-       this.type = "neutral";
-       gc.setFill(Color.WHITE);
-       gc.setStroke(Color.BLACK);
-       gc.fillRect(x, y, size, size);
-       gc.strokeRect(x, y, size, size);
-       forClicks.setLayoutX(x + size/2);
-       forClicks.setLayoutY(y + size/2);
+		this.y = y;
+		this.p = p;
+		this.type = "neutral";
+       
+		r = new Rectangle(x, y, size, size);
+		r.setFill(Color.WHITE);
+		r.setStroke(Color.BLACK);
+		p.getChildren().add(r);
+       
+		gradient = new ImageView("file:src/images/spotGradient.png");
+		gradient.setTranslateX(x);
+		gradient.setTranslateY(y);
+		gradient.setFitWidth(size);
+		gradient.setFitHeight(size);
+		gradient.setMouseTransparent(true);
+       	p.getChildren().add(gradient);
 	}
 	public void addArrow(int angle) {
-	    Image img = new Image("file:src/images/plain-arrow.png");
+	    ImageView arrow = new ImageView("file:src/images/plain-arrow.png");
 
-	    gc.save(); // Save the current state of the graphics context
-	    gc.translate(x + size/2, y + size/2);
-	    gc.rotate(angle);
-	    
-	    double scale = 0.06;
-	    
-	    double scaledWidth = img.getWidth() * scale;
-	    double scaledHeight = img.getHeight() * scale;
-
-	    gc.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
-
-	    gc.restore(); // Restore the saved state (removes the translation and rotation)
+	    arrow.setTranslateX((x - (size-10)/2) + size/2);
+	    arrow.setTranslateY((y - (size-10)/2) + size/2);
+	    arrow.setRotate(angle);
+	    arrow.setFitWidth(size - 10);
+	    arrow.setFitHeight(size - 10);
+	    arrow.setMouseTransparent(true);
+	    p.getChildren().add(arrow);
 	}
 	
 	public void addStar() {
-		Image img = new Image("file:src/images/polar-star.png");
-
-	    gc.save(); // Save the current state of the graphics context
-	    gc.translate(x + size/2, y + size/2);
-	    
-	    double scale = 0.06;
-	    
-	    double scaledWidth = img.getWidth() * scale;
-	    double scaledHeight = img.getHeight() * scale;
-
-	    gc.drawImage(img, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
-
-	    gc.restore(); // Restore the saved state (removes the translation and rotation)
+	    ImageView star = new ImageView("file:src/images/polar-star.png");
+	    star.setTranslateX((x - (size-10)/2) + size/2);
+	    star.setTranslateY((y - (size-10)/2) + size/2);
+	    star.setFitWidth(size - 10);
+	    star.setFitHeight(size - 10);
+	    star.setMouseTransparent(true);
+	    p.getChildren().add(star);
 	}
 	
 	// TODO: Document this function
@@ -136,11 +104,7 @@ public class Spot {
 	}
 	
 	public void setHomeStrechColor(Color clr) {
-		gc.setFill(clr);
-		gc.setStroke(Color.BLACK);
-		gc.clearRect(x, y, size, size);
-		gc.fillRect(x,y,size,size);
-		gc.strokeRect(x, y, size, size);
+		r.setFill(clr);
 	}
 	
 	// TODO: Document this function
@@ -170,13 +134,11 @@ public class Spot {
 	// TODO: Document this function
 	public void setType(String type) {
 		this.type = type;
-		// TODO: Set type based on keywords, throwing error for invalid type.
-		// Tip: Use gc.clearRect to replace a shape, use switch cases from constructor.
 	}
 	
-	public Label returnLabel() {
-		return forClicks;
-	}
+	public Rectangle getRectangle() {
+        return r;
+    }
 	
 	public String toString() {
 		return "Spot (" + x + ", " + y + ")";

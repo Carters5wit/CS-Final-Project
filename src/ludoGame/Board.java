@@ -3,6 +3,7 @@ package ludoGame;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 /**
  * Responsible for drawing the primary Ludo board to the window and handling board-related
@@ -122,9 +123,9 @@ public class Board {
      * @param width the width of the board
      * @param height the height of the board
      */
-    public Board(double width, double height) {
+    public Board(double width, double height, Pane p) {
         canvas = new Canvas(width, height);
-        drawBoard();
+        drawBoard(p);
     }
     
     /**
@@ -206,7 +207,7 @@ public class Board {
     /**
      * Draws all elements of the Ludo board onto the canvas. Internal use only.
      */
-    public void drawBoard() {
+    public void drawBoard(Pane p) {
         gc = canvas.getGraphicsContext2D();
         // Draw the board here
         gc.setFill(Color.rgb(239, 193, 135));
@@ -237,7 +238,7 @@ public class Board {
                 	continue;
                 }
                 
-                spots[i][j] = new Spot(x, y, gc);
+                spots[i][j] = new Spot(x, y, p);
             }
         }
         
