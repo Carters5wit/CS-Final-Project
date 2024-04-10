@@ -1,5 +1,7 @@
 package ludoGame;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -11,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -20,7 +23,10 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -106,7 +112,7 @@ public class Main extends Application {
 	   	menu.show();
        // Load the background image
        Image backgroundImage = new Image("file:src/images/ludo2.png"); // Adjust the path as needed
-       Image backgroundImage2 = new Image("file:src/images/ludoinstructions2 (Custom).png");
+       Image backgroundImage2 = new Image("file:src/images/ludo instructionz2.png");
        // Create a background image
        BackgroundImage backgroundImg = new BackgroundImage(backgroundImage,
                BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -137,6 +143,44 @@ public class Main extends Application {
 	   	exitButton.setTranslateX(0);
 	   	exitButton.setTranslateY(50);
 	   	exitButton.setPrefSize(100, 50);
+	   	
+//	   	Button playPauseButton = new Button();
+//	   	Polygon playIcon = new Polygon(0.0, 0.0, 0.0, 20.0, 7.0, 20.0, 7.0, 0.0, 0.0, 0.0); // Two vertical lines as pause icon
+//        playIcon.setFill(Color.BLACK);
+//        playPauseButton.setGraphic(playIcon);
+//        addToParent(playPauseButton, menuRoot);
+//        playPauseButton.setTranslateX(-270); // Change X
+//        playPauseButton.setTranslateY(95);
+//        playPauseButton.setPrefSize(1, 1);
+        
+        ImageView playIcon = new ImageView(new Image("file:src/images/play2.png"));
+        ImageView pauseIcon = new ImageView(new Image("file:src/images/pause2.png"));
+        ImageView icon = playIcon;
+        ImageView playPauseButton = new ImageView(icon.getImage());
+        addToParent(playPauseButton, menuRoot);
+        playPauseButton.setTranslateX(-270); // Adjust position as needed
+        playPauseButton.setTranslateY(135); // Adjust position as needed
+        playPauseButton.setFitWidth(100); // Adjust size as needed
+        playPauseButton.setFitHeight(70);
+        
+	   	
+	   	String musicFile = "allthat.mp3";     // For example
+
+	   	Media sound = new Media(new File(musicFile).toURI().toString());
+	   	MediaPlayer mediaPlayer = new MediaPlayer(sound);
+	   	mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        
+        // Add event handler to play/pause the music when the button is clicked
+        playPauseButton.setOnMouseClicked(event -> {
+            if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                mediaPlayer.pause();
+                playPauseButton.setImage(playIcon.getImage());
+                
+            } else {
+                mediaPlayer.play();
+                playPauseButton.setImage(pauseIcon.getImage());
+            }
+        });
    	
    	// When play button is pressed...
    	playButton.setOnAction(e -> {
@@ -145,6 +189,7 @@ public class Main extends Application {
            playerSelectionStage.setTitle("Player Selection");
            VBox playerSelectionLayout = new VBox(20);
            playerSelectionLayout.setAlignment(Pos.CENTER);
+           
            // Create buttons for player selection
            
            Button twoPlayersButton = new Button("2 Players");
@@ -210,6 +255,8 @@ public class Main extends Application {
    			helpStage.setTitle("Help");
    			VBox helpLayout = new VBox(10);
    			helpLayout.setAlignment(Pos.CENTER);
+   			helpLayout.setBackground(background2);
+   			
    			ScrollPane scrollPane = new ScrollPane();
    			scrollPane.setContent(helpLayout);
    			scrollPane.setFitToWidth(true);
@@ -217,6 +264,7 @@ public class Main extends Application {
    			Scene helpScene = new Scene(scrollPane, 600, 350);
    			helpStage.setScene(helpScene);
    			helpStage.show();
+   			
    			Label instruction1 = new Label("1. Place your 4 pieces in the corner of the same color");
    			Label instruction2 = new Label("2. Blue always goes first (Blue, Orange, Green, Yellow)");
    			Label instruction3 = new Label("3. Roll a 6 to move a piece out of your base onto the main track");
@@ -239,6 +287,7 @@ public class Main extends Application {
             instruction8.setTextFill(Color.WHITE);
             instruction9.setTextFill(Color.WHITE);
             instruction10.setTextFill(Color.WHITE);
+            
    		 Button helpBackButton = new Button("Back");
          helpLayout.getChildren().add(helpBackButton);
          helpBackButton.setOnAction(event -> {
@@ -248,8 +297,8 @@ public class Main extends Application {
           
            // Add instructions to layout
            helpLayout.getChildren().addAll(instruction1, instruction2, instruction3, instruction, instruction4, instruction5, instruction6, instruction7, instruction8, instruction9, instruction10);
-           helpLayout.setBackground(background2);
    	});
+   		
    	exitButton.setOnAction(event -> Platform.exit());
    	
    	
