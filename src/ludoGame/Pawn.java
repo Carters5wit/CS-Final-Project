@@ -4,18 +4,26 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Ellipse;
 import javafx.event.EventHandler;
+import javafx.scene.Cursor;
+import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 
 public class Pawn {
 	private Spot spot; // Current spot of the pawn
 	private int player = 0;
+	private Pane p;
 	private ImageView imageView; // ImageView to display the pawn image
+	private boolean clickable = false;
+	Ellipse selectCircle = new Ellipse();
 
 	public Pawn(Spot spot, int player, Pane pawnPane) {
         this.spot = spot;
         this.player = player;
+        this.p = pawnPane;
         Image img = null;
 
         switch (player) {
@@ -42,7 +50,7 @@ public class Pawn {
         imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
 
         // Add the ImageView to the pawnPane
-        pawnPane.getChildren().add(imageView);
+        p.getChildren().add(imageView);
     }
 
 	
@@ -50,6 +58,45 @@ public class Pawn {
 		spot = newSpot;
 		imageView.setTranslateX(spot.getX() + spot.getSize() / 2 - imageView.getFitWidth() / 2);
         imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
+	}
+	
+	public void toggleClick(Scene sc) {
+		if (!clickable) {
+			clickable = true;
+			
+			// Set cursor to hand when mouse enters the ImageView
+	        imageView.setOnMouseEntered(e -> {
+	            sc.setCursor(Cursor.HAND);
+	        });
+
+	        // Set cursor to default when mouse exits the ImageView
+	        imageView.setOnMouseExited(e -> {
+	            sc.setCursor(Cursor.DEFAULT);
+	        });
+	        
+	        double xVal = spot.getX() + spot.getSize() - imageView.getFitWidth() / 2;
+	        double yVal = spot.getY() + spot.getSize() - imageView.getFitHeight() / 2;
+	        
+	        selectCircle.setLayoutX(xVal);
+	        selectCircle.setLayoutY(yVal);
+	        selectCircle.setRadiusX(spot.getSize()/2);
+	        selectCircle.setRadiusY(spot.getSize()/2);
+	        selectCircle.setStroke(Color.RED);
+	        selectCircle.setStrokeWidth(2);
+	        selectCircle.setFill(Color.TRANSPARENT);
+	        selectCircle.setMouseTransparent(true);
+	        
+	        p.getChildren().add(selectCircle);
+		} else {
+			clickable = false;
+			
+			// Reset cursor to defualt on entered
+	        imageView.setOnMouseEntered(e -> {
+	            sc.setCursor(Cursor.DEFAULT);
+	        });
+			
+	        p.getChildren().remove(selectCircle);
+		}
 	}
 		
 	/**
@@ -74,5 +121,8 @@ public class Pawn {
         return imageView;
     }
 	
+	public boolean isClickable() {
+		return clickable;
+	}
 	
 }

@@ -73,16 +73,20 @@ public class Main extends Application {
             	teamPawns[i].getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
                 	@Override
                 	public void handle(MouseEvent event) {
-               		 lastPawn = teamPawns[index];
-                    	System.out.println("Pawn clicked! Player: " + teamPawns[index].pawnColor() + " | ID: " + (index+1));
-                    	// TODO: Perform pawn click logic, remove debug print
+                		Pawn p = teamPawns[index];
+                		if (p.isClickable()) {
+                			lastPawn = p;
+                        	System.out.println("Pawn clicked! Player: " + p.pawnColor() + " | ID: " + (index+1));
+                		} else {
+                			lastPawn = null;
+                		}
                 	}
             	});
         	}
     	}
     }
     
-    public static void clickConnectSpots(Spot[][] spots) {
+    public static void clickConnectSpots(Spot[][] spots, Scene sc) {
    	 for (Spot[] row : spots) {
    		 for (int i = 0; i < row.length; i++) {
    			 final int index = i; // Final variable capturing the current value of i
@@ -94,6 +98,8 @@ public class Main extends Application {
                         	System.out.println("Spot clicked! " + row[index]);
                         	if (lastPawn != null) {
                        		 lastPawn.moveTo(lastSpot);
+                       		 lastPawn.toggleClick(sc);
+                       		 lastPawn = null;
                        		 System.out.println("Moved pawn to " + lastSpot);
                         	}
                     	}
@@ -154,34 +160,34 @@ public class Main extends Application {
 //        playPauseButton.setTranslateY(95);
 //        playPauseButton.setPrefSize(1, 1);
         
-//        ImageView playIcon = new ImageView(new Image("file:src/images/play2.png"));
-//        ImageView pauseIcon = new ImageView(new Image("file:src/images/pause2.png"));
-//        ImageView icon = playIcon;
-//        ImageView playPauseButton = new ImageView(icon.getImage());
-//        addToParent(playPauseButton, menuRoot);
-//        playPauseButton.setTranslateX(-270); // Adjust position as needed
-//        playPauseButton.setTranslateY(135); // Adjust position as needed
-//        playPauseButton.setFitWidth(100); // Adjust size as needed
-//        playPauseButton.setFitHeight(70);
-//        
-//	   	
-//	   	String musicFile = "allthat.mp3";     // For example
-//
-//	   	Media sound = new Media(new File(musicFile).toURI().toString());
-//	   	MediaPlayer mediaPlayer = new MediaPlayer(sound);
-//	   	mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-//        
-//        // Add event handler to play/pause the music when the button is clicked
-//        playPauseButton.setOnMouseClicked(event -> {
-//            if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-//                mediaPlayer.pause();
-//                playPauseButton.setImage(playIcon.getImage());
-//                
-//            } else {
-//                mediaPlayer.play();
-//                playPauseButton.setImage(pauseIcon.getImage());
-//            }
-//        });
+        ImageView playIcon = new ImageView(new Image("file:src/images/play2.png"));
+        ImageView pauseIcon = new ImageView(new Image("file:src/images/pause2.png"));
+        ImageView icon = playIcon;
+        ImageView playPauseButton = new ImageView(icon.getImage());
+        addToParent(playPauseButton, menuRoot);
+        playPauseButton.setTranslateX(-270); // Adjust position as needed
+        playPauseButton.setTranslateY(135); // Adjust position as needed
+        playPauseButton.setFitWidth(100); // Adjust size as needed
+        playPauseButton.setFitHeight(70);
+        
+	   	
+	   	String musicFile = "allthat.mp3";     // For example
+
+	   	Media sound = new Media(new File(musicFile).toURI().toString());
+	   	MediaPlayer mediaPlayer = new MediaPlayer(sound);
+	   	mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        
+        // Add event handler to play/pause the music when the button is clicked
+        playPauseButton.setOnMouseClicked(event -> {
+            if (mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                mediaPlayer.pause();
+                playPauseButton.setImage(playIcon.getImage());
+                
+            } else {
+                mediaPlayer.play();
+                playPauseButton.setImage(pauseIcon.getImage());
+            }
+        });
    	
    	// When play button is pressed...
    	playButton.setOnAction(e -> {
@@ -349,21 +355,13 @@ public class Main extends Application {
     	
     	for (Pawn[] teamPawns : pawns) {
     		for (Pawn pawn : teamPawns) {
-    			// Set cursor to hand when mouse enters the ImageView
-    	        pawn.getImageView().setOnMouseEntered(e -> {
-    	            sc.setCursor(Cursor.HAND);
-    	        });
-
-    	        // Set cursor to default when mouse exits the ImageView
-    	        pawn.getImageView().setOnMouseExited(e -> {
-    	            sc.setCursor(Cursor.DEFAULT);
-    	        });
+    			pawn.toggleClick(sc);
     		}
     	}
    	 
     	// Set up event handler to detect clicks on pawns and spots
     	clickConnectPawns(pawns);
-    	clickConnectSpots(spots);
+    	clickConnectSpots(spots, sc);
    	 
 	}
     
