@@ -47,9 +47,9 @@ public class Pawn {
 
 	
 	public void moveTo(Spot newSpot) {
+		spot = newSpot;
 		imageView.setTranslateX(spot.getX() + spot.getSize() / 2 - imageView.getFitWidth() / 2);
         imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
-        spot = newSpot;
 	}
 		
 	/**
