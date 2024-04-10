@@ -48,6 +48,7 @@ public class Pawn {
         // Translate the ImageView to the correct position
         imageView.setTranslateX(spot.getX() + spot.getSize() / 2 - imageView.getFitWidth() / 2);
         imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
+        imageView.setMouseTransparent(true);
 
         // Add the ImageView to the pawnPane
         p.getChildren().add(imageView);
@@ -74,6 +75,8 @@ public class Pawn {
 	            sc.setCursor(Cursor.DEFAULT);
 	        });
 	        
+	        imageView.setMouseTransparent(false);
+	        
 	        double xVal = spot.getX() + spot.getSize() - imageView.getFitWidth() / 2;
 	        double yVal = spot.getY() + spot.getSize() - imageView.getFitHeight() / 2;
 	        
@@ -95,6 +98,8 @@ public class Pawn {
 	            sc.setCursor(Cursor.DEFAULT);
 	        });
 			
+	        imageView.setMouseTransparent(true);
+	        
 	        p.getChildren().remove(selectCircle);
 		}
 	}
