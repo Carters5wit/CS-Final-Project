@@ -12,6 +12,13 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 
+/**
+ * Responsible for creating pawn objects for each player, which can be moved around 
+ * the board onto different spots.
+ * 
+ * @author Saleem Carter
+ * @author Reggie Andrade
+ */
 public class Pawn {
 	private Spot spot; // Current spot of the pawn
 	private int player = 0;
@@ -20,6 +27,13 @@ public class Pawn {
 	private boolean clickable = false;
 	Ellipse selectCircle = new Ellipse();
 
+	/**
+	 * Default constructor to create a pawn object. Places the pawn on a given spot.
+	 * 
+	 * @param spot The spot to place the pawn on
+	 * @param player The player the pawn belongs to (1 = blue, 2 = orange, 3 = yellow, 4 = green)
+	 * @param pawnPane The pane object to place the pawn onto
+	 */
 	public Pawn(Spot spot, int player, Pane pawnPane) {
         this.spot = spot;
         this.player = player;
@@ -54,27 +68,27 @@ public class Pawn {
         p.getChildren().add(imageView);
     }
 
-	
+	/**
+	 * Method to move the pawn to a spot.
+	 * 
+	 * @param newSpot The spot to move the pawn to
+	 */
 	public void moveTo(Spot newSpot) {
 		spot = newSpot;
 		imageView.setTranslateX(spot.getX() + spot.getSize() / 2 - imageView.getFitWidth() / 2);
         imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
 	}
 	
+	/**
+	 * Method to enable and disable clicking of the pawn. Allows the pawn to be clicked, and draws a red circle
+	 * around the pawn.
+	 * 
+	 * @param sc The scene the pawn resides on (used for changing mouse cursor when hovering pawn)
+	 */
 	public void toggleClick(Scene sc) {
 		if (!clickable) {
 			clickable = true;
 			
-			// Set cursor to hand when mouse enters the ImageView
-	        imageView.setOnMouseEntered(e -> {
-	            sc.setCursor(Cursor.HAND);
-	        });
-
-	        // Set cursor to default when mouse exits the ImageView
-	        imageView.setOnMouseExited(e -> {
-	            sc.setCursor(Cursor.DEFAULT);
-	        });
-	        
 	        imageView.setMouseTransparent(false);
 	        
 	        double xVal = spot.getX() + spot.getSize() - imageView.getFitWidth() / 2;
@@ -88,6 +102,19 @@ public class Pawn {
 	        selectCircle.setStrokeWidth(2);
 	        selectCircle.setFill(Color.TRANSPARENT);
 	        selectCircle.setMouseTransparent(true);
+	        
+			// Set cursor to hand when mouse enters the ImageView
+	        imageView.setOnMouseEntered(e -> {
+	            sc.setCursor(Cursor.HAND);
+	            selectCircle.setStroke(Color.SALMON);
+	        });
+
+	        // Set cursor to default when mouse exits the ImageView
+	        imageView.setOnMouseExited(e -> {
+	            sc.setCursor(Cursor.DEFAULT);
+	            selectCircle.setStroke(Color.RED);
+	        });
+	        
 	        
 	        p.getChildren().add(selectCircle);
 		} else {
@@ -107,7 +134,7 @@ public class Pawn {
 	/**
 	 * Get the spot the pawn resides on
 	 * 
-	 * @return spot the pawn is currently on
+	 * @return Spot the pawn is currently on
 	 */
 	public Spot returnSpot() {
 		return spot;
@@ -116,16 +143,26 @@ public class Pawn {
 	/**
 	 * Get the color (player) of the pawn
 	 * 
-	 * @return player 
+	 * @return Player ID (1 = blue, 2 = orange, 3 = yellow, 4 = green)
 	 */
 	public int pawnColor() {
 		return player;
 	}
 	
+	/**
+	 * Get the ImageView object of the pawn
+	 * 
+	 * @return ImageView object
+	 */
 	public ImageView getImageView() {
         return imageView;
     }
 	
+	/**
+	 * Return if the pawn is clickable or not as a boolean
+	 * 
+	 * @return clickable boolean (true/false)
+	 */
 	public boolean isClickable() {
 		return clickable;
 	}

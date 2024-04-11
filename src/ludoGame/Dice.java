@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 /** 
- * this class is responsible to roll the dice and can roll it as many times as you want!
+ * This class is responsible to roll the dice and can roll it as many times as you want!
  * 
  * @author Ronny Ishimwe
  */

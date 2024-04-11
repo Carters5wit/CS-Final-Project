@@ -84,7 +84,7 @@ public class Board {
     };
     
     /**
-     * Combines several segment arrays into one array, internal use only.
+     * Helper method to combine several board segment arrays into one array, internal use only.
      * 
      * @param segments
      * @return combined 2D array
@@ -111,17 +111,18 @@ public class Board {
         return combinedSegments;
     }
     
-    private int[][] bluePath = combineSegments(segment1, segment2, segment3, segment4);
-    private int[][] orangePath = combineSegments(segment2, segment3, segment4, segment1);
-    private int[][] greenPath = combineSegments(segment3, segment4, segment1, segment2);
-    private int[][] yellowPath = combineSegments(segment4, segment1, segment2, segment3);
+    private int[][] bluePath = combineSegments(segment1, segment2, segment3, segment4, stretchBlue);
+    private int[][] orangePath = combineSegments(segment2, segment3, segment4, segment1, stretchOrange);
+    private int[][] greenPath = combineSegments(segment3, segment4, segment1, segment2, stretchGreen);
+    private int[][] yellowPath = combineSegments(segment4, segment1, segment2, segment3, stretchYellow);
     
     /**
      * Creates and draws a new board object, 
      * which can be added to a window root.
      * 
-     * @param width the width of the board
-     * @param height the height of the board
+     * @param width The width of the board
+     * @param height The height of the board
+     * @param p Pane object, used for drawBoard()
      */
     public Board(double width, double height, Pane p) {
         canvas = new Canvas(width, height);
@@ -131,16 +132,16 @@ public class Board {
     /**
      * Returns the canvas object of the board.
      * 
-     * @return canvas object
+     * @return Canvas object
      */
     public Canvas getCanvas() {
         return canvas;
     }
     
     /**
-     * Returns the GraphicsContext object of the board.
+     * Returns the GraphicsContext object of the board. May be depricated.
      * 
-     * @return graphicscontext object
+     * @return GraphicsContext object
      */
     public GraphicsContext getGraphicsContext() {
     	return gc;
@@ -149,7 +150,7 @@ public class Board {
     /**
      * Returns a two-dimensional array of all spots on the board.
      * 
-     * @return spot 2D array
+     * @return Spot 2D array
      */
     public Spot[][] getSpots() {
     	return spots;
@@ -157,9 +158,9 @@ public class Board {
     
     /**
      * Returns an array of coordinates which define the order which
-     * each team's pawn should move
+     * each team's pawn should move.
      * 
-     * @param team the team (player) path to get
+     * @param team The team (player) path to get (1 = blue, 2 = orange, 3 = green, 4 = yellow)
      * @return team path
      */
     public int[][] getPath(int team) {
@@ -180,7 +181,7 @@ public class Board {
     /**
      * Get the home stretch for each team (player)
      * 
-     * @return stretches the home stretches for each team (player), in order
+     * @return The home stretches for each team (player), in order within a 3D int array
      */
     public int[][][] getStretches() {
     	return stretches;
@@ -189,7 +190,7 @@ public class Board {
     /**
      * Get the homes for each team (player)
      * 
-     * @return homes home positions for each player
+     * @return Home positions for each player, in order within a 3D int array
      */
     public int[][][] getHomes() {
     	return homes;
@@ -198,7 +199,7 @@ public class Board {
     /**
      * Get the starts for each team (player)
      * 
-     * @return starts start positions for each player
+     * @return Start positions for each player, in order within a 2D array
      */
     public int[][] getStarts() {
     	return starts;
@@ -206,6 +207,8 @@ public class Board {
     
     /**
      * Draws all elements of the Ludo board onto the canvas. Internal use only.
+     * 
+     * @param p Pane, used for 
      */
     public void drawBoard(Pane p) {
         gc = canvas.getGraphicsContext2D();
