@@ -147,21 +147,6 @@ public class Main extends Application {
     	
     	// Create the main menu
     	Menu m = new Menu(primaryStage, sc, root);
-    
-   	 	/**
-   	 	 * TODOS:
-   	 	 * 
-   	 	 * 1. TODO: Open Dice class window when game is opened, and make this function have the ability to store lastRoll in a variable
-   	 	 * 2. TODO: Let each player take a turn rolling the dice (MUST USE A QUEUE TO MEET PROJECT REQUIREMENTS!!)
-   	 	 * 3. TODO: Give a player an extra turn if they roll a 6
-   	 	 * 4. TODO: Allow the player to move a pawn out of their home by clicking it if they roll a 6 (pawn should go to player start point)
-   	 	 * 5. TODO: Make the pawn move a certain amount of spaces based on roll, and let the player click which pawn they want to move
-   	 	 * 	Tip: Use board.getPath(teamID) to get the path a pawn should move based on the player color
-   	 	 * 6. TODO: Make the pawn move onto the home stretch and final spot after completing their path. If the player rolls higher than the moves needed to enter the final spot, their turn is skipped if they cannot move any other pawns.
-   	 	 * 7. TODO: Implement pawn capturing, so if a pawn lands directly on another pawn, the pawn must return to their home
-   	 	 * 8. TODO: Disable pawn capturing on safe spots
-   	 	 * 9. TODO: Add win check logic (if player gets all 4 pawns to final spot, let that player win and end the game)
-   	 	 */
 	}
 	
 	public static void gameplay(Stage primaryStage, Scene sc, StackPane root, int players) {
@@ -222,6 +207,20 @@ public class Main extends Application {
         frame.setLocation(400,300);
         frame.setVisible(true);
     	
+        /**
+   	 	 * TODOS:
+   	 	 * 
+   	 	 * 1. TODO: Open Dice class window when game is opened, and make this function have the ability to store lastRoll in a variable
+   	 	 * 2. TODO: Let each player take a turn rolling the dice (MUST USE A QUEUE TO MEET PROJECT REQUIREMENTS!!)
+   	 	 * 3. TODO: Give a player an extra turn if they roll a 6
+   	 	 * 4. TODO: Allow the player to move a pawn out of their home by clicking it if they roll a 6 (pawn should go to player start point)
+   	 	 * 5. TODO: Make the pawn move a certain amount of spaces based on roll, and let the player click which pawn they want to move
+   	 	 * 	Tip: Use board.getPath(teamID) to get the path a pawn should move based on the player color
+   	 	 * 6. TODO: Make the pawn move onto the home stretch and final spot after completing their path. If the player rolls higher than the moves needed to enter the final spot, their turn is skipped if they cannot move any other pawns.
+   	 	 * 7. TODO: Implement pawn capturing, so if a pawn lands directly on another pawn, the pawn must return to their home
+   	 	 * 8. TODO: Disable pawn capturing on safe spots
+   	 	 * 9. TODO: Add win check logic (if player gets all 4 pawns to final spot, let that player win and end the game)
+   	 	 */
 	}
     
 	public static void main(String[] args) {
