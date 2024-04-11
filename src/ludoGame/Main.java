@@ -1,5 +1,7 @@
 package ludoGame;
 
+import javax.swing.JFrame;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -207,8 +209,18 @@ public class Main extends Application {
     	clickConnectPawns(pawns);
     	clickConnectSpots(spots, sc);
     	
+    	// Show boards
     	primaryStage.setScene(sc);
 		primaryStage.show();
+		
+		// Create and show dice
+		JFrame frame = new JFrame("Dice");
+        Dice dice = new Dice();
+        frame.add(dice);
+        frame.pack();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocation(400,300);
+        frame.setVisible(true);
     	
 	}
     

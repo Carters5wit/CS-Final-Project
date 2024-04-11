@@ -74,13 +74,13 @@ public class Dice extends JPanel implements MouseListener {
     
  
 // function to enable the dice to roll
- private void enableRolling() {
+ public void enableRolling() {
     	enabled = true;
         rolled = true;
         repaint();
 	}
 // function to disable the dice to roll
-private void disableRolling() {
+public void disableRolling() {
     	enabled = false;
         rolled = false;
         repaint();
@@ -129,14 +129,4 @@ private void disableRolling() {
 
     @Override
     public void mouseExited(MouseEvent e) {}
-// This is the main method to run the dice panel
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Dice");
-        Dice dice = new Dice();
-        frame.add(dice);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
 }
