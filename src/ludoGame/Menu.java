@@ -26,12 +26,13 @@ import javafx.stage.Stage;
 public class Menu {
 	Stage gameStage;
 	Scene gameScene;
+	int players;
 	
 	public static <T extends Node> void addToParent(T node, StackPane r) {
     	r.getChildren().add(node);
 	}
 	
-	public Menu(Stage primaryStage, Scene sc) {
+	public Menu(Stage primaryStage, Scene sc, StackPane root) {
 		gameScene = sc;
 		gameStage = primaryStage;
 		
@@ -151,23 +152,23 @@ public class Menu {
        		// Bind events to buttons
        		twoPlayersButton.setOnAction(event -> {
            		menu.close();
+           		players = 2;
            		playerSelectionStage.close();
-           		primaryStage.setScene(sc);
-           		primaryStage.show();
+           		Main.gameplay(primaryStage, sc, root, players);
        		});
           
        		threePlayersButton.setOnAction(event -> {
        			menu.close();
+       			players = 3;
        			playerSelectionStage.close();
-       			primaryStage.setScene(sc);
-       			primaryStage.show();
+       			Main.gameplay(primaryStage, sc, root, players);
        		});
           
        		fourPlayersButton.setOnAction(event -> {
            		menu.close();
+           		players = 4;
            		playerSelectionStage.close();
-           		primaryStage.setScene(sc);
-           		primaryStage.show();
+           		Main.gameplay(primaryStage, sc, root, players);
        		});
           
        		backButton.setOnAction(event -> {
@@ -233,6 +234,10 @@ public class Menu {
           
 
    		});
+	}
+	
+	public int getPlayers() {
+		return players;
 	}
 
 }

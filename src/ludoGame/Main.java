@@ -30,34 +30,44 @@ public class Main extends Application {
      * 
      * @param players Number of players (1, 2, 3, or 4)
      * @param spots 2D array of spots to place pawns on
-     * @param homes Coordinate 3D array of home spots
+     * @param homes 2D array of coordinates representing each team's homes
      * @param pawns 2D array of pawns for each team
      * @param p Pane object to place pawns on
      */
-    public static void populate(int players, Spot[][] spots, int[][][] homes, Pawn[][] pawns, Pane p) {
-   	 for (int z = 0; z < homes.length; z++) {
-        	int[][] teamHomes = homes[z];
-        	Pawn[] currentPawns = null;
+    public static void populate(int players, Spot[][] spots, XY[][] homes, Pawn[][] pawns, Pane p) {
+    	switch (players) {
+   	 		case 2:
+   	 			homes[2] = null;
+   	 			homes[3] = null;
+   	 		case 3:
+   	 			homes[3] = null;
+   	 	}
+    	
+    	for (int z = 0; z < homes.length; z++) {
+    		if (homes[z] != null) {
+    			XY[] teamHomes = homes[z];
+            	Pawn[] currentPawns = null;
 
-        	switch (z) {
-            	case 0:
-                	currentPawns = pawns[0];
-                	break;
-            	case 1:
-                	currentPawns = pawns[1];
-                	break;
-            	case 2:
-                	currentPawns = pawns[2];
-                	break;
-            	case 3:
-                	currentPawns = pawns[3];
-                	break;
-        	}
+            	switch (z) {
+                	case 0:
+                    	currentPawns = pawns[0];
+                    	break;
+                	case 1:
+                    	currentPawns = pawns[1];
+                    	break;
+                	case 2:
+                    	currentPawns = pawns[2];
+                    	break;
+                	case 3:
+                    	currentPawns = pawns[3];
+                    	break;
+            	}
 
-        	for (int i = 0; i < teamHomes.length; i++) {
-            	int[] coords = teamHomes[i];
-            	currentPawns[i] = new Pawn(spots[coords[1]][coords[0]], z + 1, p);
-        	}
+            	for (int i = 0; i < teamHomes.length; i++) {
+                	XY coords = teamHomes[i];
+                	currentPawns[i] = new Pawn(spots[(int)coords.y][(int)coords.x], z + 1, p);
+            	}
+    		}
     	}
     }
     
@@ -69,7 +79,9 @@ public class Main extends Application {
     public static void clickConnectPawns(Pawn[][] pawns) {
    	 	for (Pawn[] teamPawns : pawns) {
    	 		for (int i = 0; i < teamPawns.length; i++) {
- 				final int index = i;
+   	 			if (teamPawns[i] != null) {
+   	 				
+   	 			final int index = i;
  				teamPawns[i].getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
  						@Override
  						public void handle(MouseEvent event) {
@@ -91,6 +103,8 @@ public class Main extends Application {
                 			
  						}
  				});
+   	 			}
+ 				
    	 		}
    	 	}
     }
@@ -126,53 +140,12 @@ public class Main extends Application {
     
 	@Override
 	public void start(Stage primaryStage) {
-   	 	primaryStage.setTitle("Ludo"); // Set title if main game
-   	 
-   	 	// Game Window variables
-    	final StackPane root = new StackPane();
-    	final Pane clickablePane = new Pane();
-    	final Board board = new Board(750, 750, clickablePane);
-    	final Scene sc = new Scene(root, 750, 750);
-    	primaryStage.setResizable(false);
-   	 
-    	// Board variables
-    	Spot[][] spots = board.getSpots();
-    	int[][][] homes = board.getHomes();
-    	int[][] bluePath = board.getPath(1);
-    	int[][] orangePath = board.getPath(2);
-    	int[][] greenPath = board.getPath(3);
-    	int[][] yellowPath = board.getPath(4);
-   	 
-    	// Pawn variables
-    	Pawn[] bluePawns = new Pawn[4];
-    	Pawn[] orangePawns = new Pawn[4];
-    	Pawn[] yellowPawns = new Pawn[4];
-    	Pawn[] greenPawns = new Pawn[4];
-    	Pawn[][] pawns = {bluePawns, orangePawns, yellowPawns, greenPawns};
-   	 
+		final StackPane root = new StackPane();
+		final Scene sc = new Scene(root, 750, 750);
+    	
     	// Create the main menu
-    	new Menu(primaryStage, sc);
-    	
-    	// Add board to StackPane
-    	addToParent(board.getCanvas(), root);
-   	 
-    	// Add clickable pane to StackPane
-    	addToParent(clickablePane, root);
-   	 
-    	// Populate pawn array with 4 players (create and place pawns on home spots)
-    	populate(4, spots, homes, pawns, clickablePane);
-    	
-    	// Temporary debug code to make every pawn clickable
-    	for (Pawn[] teamPawns : pawns) {
-    		for (Pawn pawn : teamPawns) {
-    			pawn.toggleClick(sc);
-    		}
-    	}
-   	 
-    	// Set up event handler to detect clicks on pawns and spots
-    	clickConnectPawns(pawns);
-    	clickConnectSpots(spots, sc);
-    	
+    	Menu m = new Menu(primaryStage, sc, root);
+    
    	 	/**
    	 	 * TODOS:
    	 	 * 
@@ -182,11 +155,61 @@ public class Main extends Application {
    	 	 * 4. TODO: Allow the player to move a pawn out of their home by clicking it if they roll a 6 (pawn should go to player start point)
    	 	 * 5. TODO: Make the pawn move a certain amount of spaces based on roll, and let the player click which pawn they want to move
    	 	 * 	Tip: Use board.getPath(teamID) to get the path a pawn should move based on the player color
-   	 	 * 6. TODO: Make the pawn move onto the home stretch and final spot after completing their path
+   	 	 * 6. TODO: Make the pawn move onto the home stretch and final spot after completing their path. If the player rolls higher than the moves needed to enter the final spot, their turn is skipped if they cannot move any other pawns.
    	 	 * 7. TODO: Implement pawn capturing, so if a pawn lands directly on another pawn, the pawn must return to their home
    	 	 * 8. TODO: Disable pawn capturing on safe spots
    	 	 * 9. TODO: Add win check logic (if player gets all 4 pawns to final spot, let that player win and end the game)
    	 	 */
+	}
+	
+	public static void gameplay(Stage primaryStage, Scene sc, StackPane root, int players) {
+		primaryStage.setTitle("Ludo"); // Set title if main game
+	   	 
+   	 	// Game Window variables
+    	final Pane clickablePane = new Pane();
+    	final Board board = new Board(750, 750, clickablePane);
+//    	primaryStage.setResizable(false);
+   	 
+    	// Board variables
+    	Spot[][] spots = board.getSpots();
+    	XY[][] homes = {board.getHomes(1), board.getHomes(2), board.getHomes(3), board.getHomes(4)};
+    	XY[] bluePath = board.getPath(1);
+    	XY[] orangePath = board.getPath(2);
+    	XY[] greenPath = board.getPath(3);
+    	XY[] yellowPath = board.getPath(4);
+   	 
+    	// Pawn variables
+    	Pawn[] bluePawns = new Pawn[4];
+    	Pawn[] orangePawns = new Pawn[4];
+    	Pawn[] yellowPawns = new Pawn[4];
+    	Pawn[] greenPawns = new Pawn[4];
+    	Pawn[][] pawns = {bluePawns, orangePawns, yellowPawns, greenPawns};
+    	
+    	// Add board to StackPane
+    	addToParent(board.getCanvas(), root);
+   	 
+    	// Add clickable pane to StackPane
+    	addToParent(clickablePane, root);
+   	 
+    	// Populate pawn array with 4 players (create and place pawns on home spots)
+    	populate(players, spots, homes, pawns, clickablePane);
+    	
+    	// Temporary debug code to make every pawn clickable
+    	for (Pawn[] teamPawns : pawns) {
+    		for (Pawn pawn : teamPawns) {
+    			if (pawn != null) {
+    				pawn.toggleClick(sc);
+    			}
+    		}
+    	}
+   	 
+    	// Set up event handler to detect clicks on pawns and spots
+    	clickConnectPawns(pawns);
+    	clickConnectSpots(spots, sc);
+    	
+    	primaryStage.setScene(sc);
+		primaryStage.show();
+    	
 	}
     
 	public static void main(String[] args) {

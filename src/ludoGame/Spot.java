@@ -18,8 +18,7 @@ import javafx.scene.shape.Rectangle;
 public class Spot {
 	private String type;
 	private Pane p;
-	private double x;
-	private double y;
+	private XY coords;
 	private ImageView gradient; // ImageView to display the spot gradient
 	private Rectangle r;
 	private final double size = 50; // Fixed size, do not change
@@ -28,14 +27,12 @@ public class Spot {
    /**
     * Default constructor to construct a spot onto the GraphicsContext (non-clickable)
     * 
-    * @param x The x-coordinate of the spot
-    * @param y The y-coordinate of the spot
+    * @param coords The XY object containing the coordinates of the spot
     * @param type The type of spot ("home" or "final")
     * @param gc The GraphicsContext to draw to
     */
-	public Spot(double x, double y, String type, GraphicsContext gc) {
-		this.x = x;
-		this.y = y;
+	public Spot(XY coords, String type, GraphicsContext gc) {
+		this.coords = coords;
 		this.type = type;
        
 		boolean normal = true;
@@ -44,8 +41,8 @@ public class Spot {
 		switch (type) {
        		case "home":
                double radius = size / 2.0;
-               double centerX = x + radius;
-               double centerY = y + radius;
+               double centerX = coords.x + radius;
+               double centerY = coords.y + radius;
                // Draw a circular spot
                normal = false;
                gc.setFill(fillColor);
@@ -65,8 +62,8 @@ public class Spot {
 		if (normal) {
 			gc.setFill(fillColor);
 			gc.setStroke(Color.BLACK);
-			gc.fillRect(x, y, size, size);
-			gc.strokeRect(x, y, size, size);
+			gc.fillRect(coords.x, coords.y, size, size);
+			gc.strokeRect(coords.x, coords.y, size, size);
        }
 	}
 	
@@ -76,24 +73,22 @@ public class Spot {
 	 * 
 	 * Draws the spot onto a Pane to allow clicking interaction.
 	 * 
-	 * @param x The x-coordinate of the spot
-	 * @param y The y-coordinate of the spot
+	 * @param coords The XY object containing the coordinates of the spot
 	 * @param p The pane to draw the spot onto.
 	 */
-	public Spot(double x, double y, Pane p) {
-		this.x = x;
-		this.y = y;
+	public Spot(XY coords, Pane p) {
+		this.coords = coords;
 		this.p = p;
 		this.type = "neutral";
        
-		r = new Rectangle(x, y, size, size);
+		r = new Rectangle(coords.x, coords.y, size, size);
 		r.setFill(Color.WHITE);
 		r.setStroke(Color.BLACK);
 		p.getChildren().add(r);
        
 		gradient = new ImageView("file:src/images/spotGradient.png");
-		gradient.setTranslateX(x);
-		gradient.setTranslateY(y);
+		gradient.setTranslateX(coords.x);
+		gradient.setTranslateY(coords.y);
 		gradient.setFitWidth(size);
 		gradient.setFitHeight(size);
 		gradient.setMouseTransparent(true);
@@ -108,8 +103,8 @@ public class Spot {
 	public void addArrow(int angle) {
 	    ImageView arrow = new ImageView("file:src/images/plain-arrow.png");
 
-	    arrow.setTranslateX((x - (size-10)/2) + size/2);
-	    arrow.setTranslateY((y - (size-10)/2) + size/2);
+	    arrow.setTranslateX((coords.x - (size-10)/2) + size/2);
+	    arrow.setTranslateY((coords.y - (size-10)/2) + size/2);
 	    arrow.setRotate(angle);
 	    arrow.setFitWidth(size - 10);
 	    arrow.setFitHeight(size - 10);
@@ -122,8 +117,8 @@ public class Spot {
 	 */
 	public void addStar() {
 	    ImageView star = new ImageView("file:src/images/polar-star.png");
-	    star.setTranslateX((x - (size-10)/2) + size/2);
-	    star.setTranslateY((y - (size-10)/2) + size/2);
+	    star.setTranslateX((coords.x - (size-10)/2) + size/2);
+	    star.setTranslateY((coords.y - (size-10)/2) + size/2);
 	    star.setFitWidth(size - 10);
 	    star.setFitHeight(size - 10);
 	    star.setMouseTransparent(true);
@@ -140,7 +135,7 @@ public class Spot {
 	 * @return X-coordinate
 	 */
 	public double getX() {
-		return x;
+		return coords.x;
 	}
 	
 	/**
@@ -149,7 +144,7 @@ public class Spot {
 	 * @return Y-coordinate
 	 */
 	public double getY() {
-		return y;
+		return coords.y;
 	}
 	
 	/**
@@ -192,6 +187,6 @@ public class Spot {
 	 * Prints a formatted version of the Spot class (Spot (x, y))
 	 */
 	public String toString() {
-		return "Spot (" + x + ", " + y + ")";
+		return "Spot (" + coords.x + ", " + coords.y + ")";
 	}
 }

@@ -19,33 +19,33 @@ public class Board {
     private Spot[][] spots = new Spot[rows][columns]; // Array to store spots
     
     // Coordinates for each player's home stretch
-    private int[][] stretchBlue = {{7,1},{7,2},{7,3},{7,4},{7,5}};
-    private int[][] stretchOrange = {{1,7},{2,7},{3,7},{4,7},{5,7}};
-    private int[][] stretchYellow = {{13,7},{12,7},{11,7},{10,7},{9,7}};
-    private int[][] stretchGreen = {{7,13},{7,12},{7,11},{7,10},{7,9}};
-    private int[][][] stretches = {stretchBlue, stretchOrange, stretchYellow, stretchGreen};
+    private XY[] stretchBlue = {XY.form(7,1), XY.form(7,2), XY.form(7,3), XY.form(7,4), XY.form(7,5)};
+    private XY[] stretchOrange = {XY.form(1,7), XY.form(2,7), XY.form(3,7), XY.form(4,7), XY.form(5,7)};
+    private XY[] stretchYellow = {XY.form(13,7), XY.form(12,7), XY.form(11,7), XY.form(10,7), XY.form(9,7)};
+    private XY[] stretchGreen = {XY.form(7,13), XY.form(7,12), XY.form(7,11), XY.form(7,10), XY.form(7,9)};
+    private XY[][] stretches = {stretchBlue, stretchOrange, stretchYellow, stretchGreen};
     
     // Coordinates for each player's home base
-    private int[][] homesBlue = {{2,2}, {2,4}, {4,2}, {4,4}};
-    private int[][] homesOrange = {{2,10}, {2,12}, {4,10}, {4,12}};
-    private int[][] homesYellow = {{10,2}, {10,4}, {12,2}, {12,4}};
-    private int[][] homesGreen = {{10,10}, {10,12}, {12,10}, {12,12}};
-    private int[][][] homes = {homesBlue, homesOrange, homesYellow, homesGreen};
+    private XY[] homesBlue = {XY.form(2, 2), XY.form(2, 4), XY.form(4, 2), XY.form(4, 4)};
+    private XY[] homesOrange = {XY.form(2, 10), XY.form(2, 12), XY.form(4, 10), XY.form(4, 12)};
+    private XY[] homesYellow = {XY.form(10, 2), XY.form(10, 4), XY.form(12, 2), XY.form(12, 4)};
+    private XY[] homesGreen = {XY.form(10, 10), XY.form(10, 12), XY.form(12, 10), XY.form(12, 12)};
+    private XY[][] homes = {homesBlue, homesOrange, homesYellow, homesGreen};
     
     // Coordinates for each player's start
-    private int[] startBlue = {6,1};
-    private int[] startOrange = {1,8};
-    private int[] startGreen = {8,13};
-    private int[] startYellow = {13,6};
-    private int[][] starts = {startBlue, startOrange, startGreen, startYellow};
+    private XY startBlue = new XY(6,1);
+    private XY startOrange = new XY(1,8);
+    private XY startGreen = new XY(8,13);
+    private XY startYellow = new XY(13,6);
+    private XY[] starts = {startBlue, startOrange, startYellow, startGreen};
     
-    private int[] finalBlue = {7,6};
-    private int[] finalOrange = {6,7};
-    private int[] finalGreen = {7,8};
-    private int[] finalYellow = {8,7};
-    private int[][] finals = {finalBlue, finalOrange, finalGreen, finalYellow};
+    private XY finalBlue = new XY(7,6);
+    private XY finalOrange = new XY(6,7);
+    private XY finalGreen = new XY(7,8);
+    private XY finalYellow = new XY(8,7);
+    private XY[] finals = {finalBlue, finalOrange, finalYellow, finalGreen};
     
-    private int[][] safes = {{8,2},{2,6},{6,12},{12,8}};
+    private XY[] safes = {new XY(8,2),new XY(2,6),new XY(6,12),new XY(12,8)};
     
     // Color for each player
     private Color blue = Color.rgb(54, 103, 181);
@@ -55,33 +55,34 @@ public class Board {
     
     // Defined segments of the board
     
-    // Runs from the front of blue start, to behind orange start
-    private int[][] segment1 = {
-    		{6,2}, {6,3}, {6,4}, {6,5},	
-    		{5,6}, {4,6}, {3,6}, {2,6},	{1,6},
-    		{0,6}, {0,7}, {0,8},
+    // Segment 1: Runs from the front of blue start to behind orange start
+    private XY[] segment1 = {
+        XY.form(6, 2), XY.form(6, 3), XY.form(6, 4), XY.form(6, 5),
+        XY.form(5, 6), XY.form(4, 6), XY.form(3, 6), XY.form(2, 6), XY.form(1, 6),
+        XY.form(0, 6), XY.form(0, 7), XY.form(0, 8)
     };
-    
-    // Runs from the front of orange start, to behind green start
-    private int[][] segment2 = {
-    		{2,8}, {3,8}, {4,8}, {5,8},
-    		{6,9}, {6,10}, {6,11}, {6,12}, {6,13},
-    		{6,14}, {7,14}, {8,14},
+
+    // Segment 2: Runs from the front of orange start to behind green start
+    private XY[] segment2 = {
+        XY.form(2, 8), XY.form(3, 8), XY.form(4, 8), XY.form(5, 8),
+        XY.form(6, 9), XY.form(6, 10), XY.form(6, 11), XY.form(6, 12), XY.form(6, 13),
+        XY.form(6, 14), XY.form(7, 14), XY.form(8, 14)
     };
-    
-    // Runs from the front of green start, to behind yellow start
-    private int[][] segment3 = {
-    		{8,12}, {8,11}, {8,10},	{8,9},
-    		{9,8}, {10,8}, {11,8}, {12,8}, {13,8},
-    		{14,8}, {14,7}, {14,6},
+
+    // Segment 3: Runs from the front of green start to behind yellow start
+    private XY[] segment3 = {
+        XY.form(8, 12), XY.form(8, 11), XY.form(8, 10), XY.form(8, 9),
+        XY.form(9, 8), XY.form(10, 8), XY.form(11, 8), XY.form(12, 8), XY.form(13, 8),
+        XY.form(14, 8), XY.form(14, 7), XY.form(14, 6)
     };
-    
-    // Runs from the front of yellow start, to behind blue start
-    private int[][] segment4 = {
-    		{12,6}, {11,6}, {10,6},	{9,6},
-    		{8,5}, {8,4}, {8,3}, {8,2},	{8,1},
-    		{8,0}, {7,0}, {6,0},
+
+    // Segment 4: Runs from the front of yellow start to behind blue start
+    private XY[] segment4 = {
+        XY.form(12, 6), XY.form(11, 6), XY.form(10, 6), XY.form(9, 6),
+        XY.form(8, 5), XY.form(8, 4), XY.form(8, 3), XY.form(8, 2), XY.form(8, 1),
+        XY.form(8, 0), XY.form(7, 0), XY.form(6, 0)
     };
+
     
     /**
      * Helper method to combine several board segment arrays into one array, internal use only.
@@ -89,20 +90,20 @@ public class Board {
      * @param segments
      * @return combined 2D array
      */
-    private int[][] combineSegments(int[][]... segments) {
+    private XY[] combineSegments(XY[]... segments) {
         // Calculate total length
         int totalLength = 0;
-        for (int[][] segment : segments) {
+        for (XY[] segment : segments) {
             totalLength += segment.length;
         }
         // Exclude the last element of the last segment
         totalLength--;
 
-        int[][] combinedSegments = new int[totalLength][2];
+        XY[] combinedSegments = new XY[totalLength];
         int index = 0;
 
         // Combine segments
-        for (int[][] segment : segments) {
+        for (XY[] segment : segments) {
             for (int i = 0; i < segment.length - 1; i++) {
                 combinedSegments[index++] = segment[i];
             }
@@ -111,10 +112,10 @@ public class Board {
         return combinedSegments;
     }
     
-    private int[][] bluePath = combineSegments(segment1, segment2, segment3, segment4, stretchBlue);
-    private int[][] orangePath = combineSegments(segment2, segment3, segment4, segment1, stretchOrange);
-    private int[][] greenPath = combineSegments(segment3, segment4, segment1, segment2, stretchGreen);
-    private int[][] yellowPath = combineSegments(segment4, segment1, segment2, segment3, stretchYellow);
+    private XY[] bluePath = combineSegments(segment1, segment2, segment3, segment4, stretchBlue);
+    private XY[] orangePath = combineSegments(segment2, segment3, segment4, segment1, stretchOrange);
+    private XY[] yellowPath = combineSegments(segment4, segment1, segment2, segment3, stretchYellow);
+    private XY[] greenPath = combineSegments(segment3, segment4, segment1, segment2, stretchGreen);
     
     /**
      * Creates and draws a new board object, 
@@ -163,28 +164,39 @@ public class Board {
      * @param team The team (player) path to get (1 = blue, 2 = orange, 3 = green, 4 = yellow)
      * @return team path
      */
-    public int[][] getPath(int team) {
+    public XY[] getPath(int team) {
     	switch (team) {
     		case 1:
     			return bluePath;
     		case 2:
     			return orangePath;
     		case 3:
-    			return greenPath;
-    		case 4:
     			return yellowPath;
+    		case 4:
+    			return greenPath;
     		default:
     			return null;
     	}
     }
     
     /**
-     * Get the home stretch for each team (player)
+     * Get the home stretch for a certain team (player)
      * 
      * @return The home stretches for each team (player), in order within a 3D int array
      */
-    public int[][][] getStretches() {
-    	return stretches;
+    public XY[] getStretch(int team) {
+	    switch (team) {
+			case 1:
+				return stretchBlue;
+			case 2:
+				return stretchOrange;
+			case 3:
+				return stretchYellow;
+			case 4:
+				return stretchGreen;
+			default:
+				return null;
+		}
     }
     
     /**
@@ -192,8 +204,19 @@ public class Board {
      * 
      * @return Home positions for each player, in order within a 3D int array
      */
-    public int[][][] getHomes() {
-    	return homes;
+    public XY[] getHomes(int team) {
+	    switch (team) {
+			case 1:
+				return homesBlue;
+			case 2:
+				return homesOrange;
+			case 3:
+				return homesYellow;
+			case 4:
+				return homesGreen;
+			default:
+				return null;
+		}
     }
     
     /**
@@ -201,8 +224,19 @@ public class Board {
      * 
      * @return Start positions for each player, in order within a 2D array
      */
-    public int[][] getStarts() {
-    	return starts;
+    public XY getStart(int team) {
+    	switch (team) {
+			case 1:
+				return startBlue;
+			case 2:
+				return startOrange;
+			case 3:
+				return startYellow;
+			case 4:
+				return startGreen;
+			default:
+				return null;
+    	}
     }
     
     /**
@@ -241,16 +275,16 @@ public class Board {
                 	continue;
                 }
                 
-                spots[i][j] = new Spot(x, y, p);
+                spots[i][j] = new Spot(new XY(x,y), p);
             }
         }
         
         // Change color of home stretch spots
         for (int z = 0; z < stretches.length; z++) {
-        	int[][] stretch = stretches[z];
-        	for (int[] coord : stretch) {
-            	int i = coord[0];
-            	int j = coord[1];
+        	XY[] stretch = stretches[z];
+        	for (XY coord : stretch) {
+            	int i = (int) coord.x;
+            	int j = (int) coord.y;
             	
             	if (z == 0) {
             		spots[i][j].setHomeStrechColor(blue);
@@ -299,17 +333,17 @@ public class Board {
         
         // Create home spots
         for (int z = 0; z < homes.length; z++) {
-        	int[][] homeSpots = homes[z];
-        	for (int[] coords : homeSpots) {
-        		double x = coords[0] * gapX;
-                double y = coords[1] * gapY;
-        		spots[coords[0]][coords[1]] = new Spot(x, y, "home", gc);
+        	XY[] homeSpots = homes[z];
+        	for (XY coords : homeSpots) {
+        		double x = coords.x * gapX;
+                double y = coords.y * gapY;
+        		spots[(int)coords.x][(int)coords.y] = new Spot(new XY(x,y), "home", gc);
         	}
         }
         
         // Change start spots
         for (int i = 0; i < starts.length; i++) {
-        	int[] start = starts[i];
+        	XY start = starts[i];
         	Color clr = null;
         	int ang = 0;
         	
@@ -322,26 +356,26 @@ public class Board {
         			clr = orange;
         			break;
         		case 2:
-        			clr = green;
-        			ang = 90;
-        			break;
-        		case 3:
         			clr = yellow;
         			ang = 180;
         			break;
+        		case 3:
+        			clr = green;
+        			ang = 90;
+        			break;
         	}
         	
-        	spots[start[0]][start[1]].setHomeStrechColor(clr);
-        	spots[start[0]][start[1]].addArrow(ang);
-        	spots[start[0]][start[1]].setType("start");
+        	spots[(int)start.x][(int)start.y].setHomeStrechColor(clr);
+        	spots[(int)start.x][(int)start.y].addArrow(ang);
+        	spots[(int)start.x][(int)start.y].setType("start");
         }
         
         // Change safe spots
         for (int i = 0; i < safes.length; i++) {
-        	int[] safe = safes[i];
+        	XY safe = safes[i];
  
-        	spots[safe[0]][safe[1]].addStar();
-        	spots[safe[0]][safe[1]].setType("safe");
+        	spots[(int)safe.x][(int)safe.y].addStar();
+        	spots[(int)safe.x][(int)safe.y].setType("safe");
         }
         
         // Draw the center image
@@ -356,12 +390,12 @@ public class Board {
 
 	    // Making invisible final spots
         for (int i = 0; i < finals.length; i++) {
-        	int[] coords = finals[i];
+        	XY coords = finals[i];
         	
-        	double x = coords[0] * gapX;
-            double y = coords[1] * gapY;
+        	double x = coords.x * gapX;
+            double y = coords.y * gapY;
         	
-        	spots[coords[0]][coords[1]] = new Spot(x, y, "final", gc);
+        	spots[(int)coords.x][(int)coords.y] = new Spot(new XY(x,y), "final", gc);
         }
     }
 }
