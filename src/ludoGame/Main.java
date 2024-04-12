@@ -1,5 +1,7 @@
 package ludoGame;
 
+import java.util.ArrayList;
+
 import javax.swing.JFrame;
 
 import javafx.application.Application;
@@ -78,7 +80,7 @@ public class Main extends Application {
      * 
      * @param pawns 2D array of pawns with each team's pawns
      */
-    public static void clickConnectPawns(Pawn[][] pawns) {
+    public static void clickConnectPawns(Pawn[][] pawns, ArrayList<Player> plrs) {
    	 	for (Pawn[] teamPawns : pawns) {
    	 		for (int i = 0; i < teamPawns.length; i++) {
    	 			if (teamPawns[i] != null) {
@@ -98,10 +100,19 @@ public class Main extends Application {
                 			if (pawn.isClickable()) {
                 				// Logic to perform if pawn is clickable
                 				lastPawn = pawn;
+                				
+//                				Player currentPlayer = plrs.get(index + 1);
+//                    			
+//                    			// After moving the pawn, switch to the next player's turn
+//                                currentPlayer = (currentPlayer + 1) % 4;
+//                                System.out.println("Player " + (currentPlayer + 1) + "'s turn");
+//                                // Allow the next player to roll the dice
+//                                clickablePane.setDisable(false);
                 			} else {
                 				// Logic to perform if pawn cannot be clicked
                 				lastPawn = null;
                 			}
+                		
                 			
  						}
  				});
@@ -125,13 +136,13 @@ public class Main extends Application {
    				 row[i].getRectangle().setOnMouseClicked(new EventHandler<MouseEvent>() {
                     	@Override
                     	public void handle(MouseEvent event) {
-                   		 lastSpot = row[index];
+                   		 	lastSpot = row[index];
                         	System.out.println("Spot clicked! " + row[index]);
                         	if (lastPawn != null) {
-                       		 lastPawn.moveTo(lastSpot);
-                       		 lastPawn.toggleClick(sc);
-                       		 lastPawn = null;
-                       		 System.out.println("Moved pawn to " + lastSpot);
+                       		 	lastPawn.moveTo(lastSpot);
+                       		 	lastPawn.toggleClick(sc);
+                       		 	lastPawn = null;
+                       		 	System.out.println("Moved pawn to " + lastSpot);
                         	}
                     	}
                 	});
@@ -172,6 +183,10 @@ public class Main extends Application {
     	Pawn[] greenPawns = new Pawn[4];
     	Pawn[][] pawns = {bluePawns, orangePawns, yellowPawns, greenPawns};
     	
+    	// Game variables
+    	boolean won = false;
+    	int playerIndex = 0;
+    	
     	// Add board to StackPane
     	addToParent(board.getCanvas(), root);
    	 
@@ -180,23 +195,17 @@ public class Main extends Application {
    	 
     	// Populate pawn array with 4 players (create and place pawns on home spots)
     	populate(players, spots, homes, pawns, clickablePane);
-    	
-    	// Temporary debug code to make every pawn clickable
-    	for (Pawn[] teamPawns : pawns) {
-    		for (Pawn pawn : teamPawns) {
-    			if (pawn != null) {
-    				pawn.toggleClick(sc);
-    			}
-    		}
-    	}
    	 
     	// Set up event handler to detect clicks on pawns and spots
-    	clickConnectPawns(pawns);
+    	clickConnectPawns(pawns, Player.getPlayers());
     	clickConnectSpots(spots, sc);
     	
     	// Show boards
     	primaryStage.setScene(sc);
 		primaryStage.show();
+		
+		// Allow the first player to roll the dice
+        clickablePane.setDisable(false);
 		
 		// Create and show dice
 		JFrame frame = new JFrame("Dice");
@@ -206,11 +215,42 @@ public class Main extends Application {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocation(400,300);
         frame.setVisible(true);
+        
+        // Create players
+        Player blue = new Player(1, bluePawns);
+        Player orange = new Player(2, orangePawns);
+        Player yellow = new Player(3, yellowPawns);
+        Player green = new Player(4, greenPawns);
+        ArrayList<Player> plrs = Player.getPlayers();
+        
+        // Primary game loop
+        while (!won) {
+        	Player currentPlr = plrs.get(playerIndex);
+        	int roll = dice.getRoll();
+        	
+        	if (roll == 6) {
+        		continue;
+        	} else {
+        		if (playerIndex == 3) {
+        			playerIndex = 0;
+        		} else {
+        			playerIndex++; // Moves to the next player's turn
+        		}
+        	}
+        	
+        	// Allow player to click their pawns
+        	for (Pawn pawn : currentPlr.getPawns()) {
+    			if (pawn != null) {
+    				pawn.toggleClick(sc);
+    			}
+    		}
+        }
+        
     	
         /**
    	 	 * TODOS:
    	 	 * 
-   	 	 * 1. TODO: Open Dice class window when game is opened, and make this function have the ability to store lastRoll in a variable
+   	 	 * 1. : Open Dice class window when game is opened, and make this function have the ability to store lastRoll in a variable
    	 	 * 2. TODO: Let each player take a turn rolling the dice (MUST USE A QUEUE TO MEET PROJECT REQUIREMENTS!!)
    	 	 * 3. TODO: Give a player an extra turn if they roll a 6
    	 	 * 4. TODO: Allow the player to move a pawn out of their home by clicking it if they roll a 6 (pawn should go to player start point)
