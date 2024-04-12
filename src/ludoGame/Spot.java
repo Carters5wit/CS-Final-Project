@@ -1,6 +1,8 @@
 package ludoGame;
 
 
+import java.util.ArrayList;
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -19,6 +21,7 @@ public class Spot {
 	private String type;
 	private Pane p;
 	private XY coords;
+	private ArrayList<Pawn> occupyingPawns = new ArrayList<Pawn>();
 	private ImageView gradient; // ImageView to display the spot gradient
 	private Rectangle r;
 	private final double size = 50; // Fixed size, do not change
@@ -125,6 +128,31 @@ public class Spot {
 	    p.getChildren().add(star);
 	}
 	
+	/**
+	 * Method to remove the gradient from the spot.
+	 */
+	public void removeGradient() {
+		p.getChildren().remove(gradient);
+	}
+	
+	/**
+	 * Adds an occupying pawn
+	 * 
+	 * @param p Pawn to occupy the spot
+	 */
+	public void occupy(Pawn p) {
+		occupyingPawns.add(p);
+	}
+	
+	/**
+	 * Removes an occupying pawn
+	 * 
+	 * @param p Pawn to unoccupy the spot
+	 */
+	public void unoccupy(Pawn p) {
+		occupyingPawns.remove(p);
+	}
+	
 	public void setHomeStrechColor(Color clr) {
 		r.setFill(clr);
 	}
@@ -182,6 +210,15 @@ public class Spot {
 	public Rectangle getRectangle() {
         return r;
     }
+	
+	/**
+	 * Gets the pawns which reside on this spot
+	 * 
+	 * @return Occupying pawns
+	 */
+	public ArrayList<Pawn> getOccupying() {
+		return occupyingPawns;
+	}
 	
 	/**
 	 * Prints a formatted version of the Spot class (Spot (x, y))

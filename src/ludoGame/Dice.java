@@ -1,13 +1,20 @@
 package ludoGame;
 
 import javax.swing.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.Scene;
+
 import java.awt.*;
 import java.awt.event.*;
 /** 
  * This class is responsible to roll the dice and can roll it as many times as you want!
  * 
  * @author Ronny Ishimwe
+ * @author Reggie Andrade
  */
+import java.util.ArrayList;
 
 public class Dice extends JPanel implements MouseListener {
     private int lastRoll;
@@ -15,9 +22,21 @@ public class Dice extends JPanel implements MouseListener {
     private Image[] diceImages;
     private boolean rolled;
     private JButton rollButton; // button that helps roll multiple times
+    private BooleanProperty signal = new SimpleBooleanProperty(false);
 
-    public Dice() {
-        lastRoll = 1;
+    private ArrayList<Player> plrs;
+    private Scene sc;
+    private Pawn[][] pawns;
+    private Board board;
+    private int players;
+    
+    public Dice(ArrayList<Player> plrs, int players, Scene sc, Pawn[][] pawns, Board board) {
+        this.plrs = plrs;
+        this.sc = sc;
+        this.pawns = pawns;
+        this.board = board;
+        this.players = players;
+    	lastRoll = 1;
         enabled = true;
         rolled = false;
 
@@ -48,6 +67,17 @@ public class Dice extends JPanel implements MouseListener {
     public int getRoll() {
         return lastRoll;
     }
+    
+    // Method to add a listener to the signal property
+    public void addSignalListener(ChangeListener<Boolean> listener) {
+        signal.addListener(listener);
+    }
+
+    // Method to remove a listener from the signal property
+    public void removeSignalListener(ChangeListener<Boolean> listener) {
+        signal.removeListener(listener);
+    }
+    
 // This method is used to toggle with the rolling state of the dice.
     public void toggleRoll() {
         enabled = !enabled;
@@ -69,6 +99,7 @@ public class Dice extends JPanel implements MouseListener {
                 }
             }
             enableRolling();//re-enables the dice to roll again after all the player's rolls are completed
+            Main.turn(plrs, players, this, sc, pawns, board, true);
         }
     }
     
@@ -88,20 +119,16 @@ public void disableRolling() {
 	}
 
 
-	@Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+@Override
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-        if (enabled) {
-            if (rolled) {
-                g.drawImage(diceImages[lastRoll - 1], 0, 0, getWidth(), getHeight(), this);
-            } else {
-                g.drawString("Click to Roll", 10000, getHeight() / 2);
-            }
-        } else {
-            g.drawString("Disabled", 10, getHeight() / 2);
-        }
+    if (rolled) {
+        g.drawImage(diceImages[lastRoll - 1], 0, 0, getWidth(), getHeight(), this);
+    } else {
+        g.drawString("Click to Roll", 10, getHeight() / 2);
     }
+}
 	/**
 	 * Invoked when the mouse button has been clicked (pressed and released) on this component.
     * If rolling is enabled and the dice has not already been rolled, this method generates
@@ -114,6 +141,7 @@ public void disableRolling() {
             lastRoll = (int) (Math.random() * 6) + 1;
             rolled = true;
             repaint();
+            signal.set(true); // Fire the signal property when the dice is rolled
         }
     }
 //

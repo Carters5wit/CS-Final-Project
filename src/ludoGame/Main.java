@@ -1,9 +1,7 @@
 package ludoGame;
 
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -12,11 +10,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 public class Main extends Application {
     
     private static Pawn lastPawn;
     private static Spot lastSpot;
+    private static int playerIndex;
     
     /**
      * Helper method to add a JavaFX node to any StackPane
@@ -43,8 +43,10 @@ public class Main extends Application {
    	 		case 2:
    	 			homes[2] = null;
    	 			homes[3] = null;
+   	 			break;
    	 		case 3:
    	 			homes[3] = null;
+   	 			break;
    	 	}
     	
     	for (int z = 0; z < homes.length; z++) {
@@ -80,7 +82,7 @@ public class Main extends Application {
      * 
      * @param pawns 2D array of pawns with each team's pawns
      */
-    public static void clickConnectPawns(Pawn[][] pawns, ArrayList<Player> plrs) {
+    public static void clickConnectPawns(Pawn[][] pawns, ArrayList<Player> plrs, int players, Dice dice, Board board, Scene sc) {
    	 	for (Pawn[] teamPawns : pawns) {
    	 		for (int i = 0; i < teamPawns.length; i++) {
    	 			if (teamPawns[i] != null) {
@@ -97,17 +99,76 @@ public class Main extends Application {
  							 */
  							
    	 						Pawn pawn = teamPawns[index];
+   	 						Spot[][] spots = board.getSpots();
+   	 						XY[] path = board.getPath(pawn.pawnColor());
+   	 						
                 			if (pawn.isClickable()) {
-                				// Logic to perform if pawn is clickable
+                				// Logic to perform if pawn is clicked
                 				lastPawn = pawn;
+                				if (dice.getRoll() == 6 && pawn.getMoves() == 0) {
+                					XY start = board.getStart(pawn.pawnColor());
+                					ArrayList<Pawn> caps = pawn.moveTo(spots[(int)start.x][(int)start.y], 0, true);
+                					
+                					if (!(caps.isEmpty())) {
+            							for (Pawn cap : caps) {
+            								if (cap.getHome().getOccupying().isEmpty()) {
+            									cap.moveTo(cap.getHome(), 0, true);
+                								cap.reset();
+            								}
+            							}
+            						}
+                					
+                				} else if (pawn.isOnBoard()) {
+                					
+                					if (pawn.getMoves() == 0) {
+                						XY target = path[dice.getRoll() - 1];
+                						ArrayList<Pawn> caps = pawn.moveTo(spots[(int)target.x][(int)target.y], dice.getRoll());
+                						
+                						if (!(caps.isEmpty())) {
+                							for (Pawn cap : caps) {
+                								if (cap.getHome().getOccupying().isEmpty()) {
+                									cap.moveTo(cap.getHome(), 0, true);
+                    								cap.reset();
+                								}
+                							}
+                						}
+                					} else {
+                						if ((dice.getRoll() + pawn.getDisplace()) <= path.length) {
+                							XY target = path[dice.getRoll() + pawn.getDisplace() - 1];
+                    						ArrayList<Pawn> caps = pawn.moveTo(spots[(int)target.x][(int)target.y], dice.getRoll());
+                    						
+                    						if (!(caps.isEmpty())) {
+                    							for (Pawn cap : caps) {
+                    								if (cap.getHome().getOccupying().isEmpty()) {
+                    									cap.moveTo(cap.getHome(), 0, true);
+                        								cap.reset();
+                    								}
+                    							}
+                    						}
+                						} else {
+                							XY[] stretch = board.getStretch(pawn.pawnColor());
+                							if ((dice.getRoll() + pawn.getDisplace() - 50) <= stretch.length) {
+                								XY target = stretch[dice.getRoll() + pawn.getDisplace() - 51];
+                								pawn.moveTo(spots[(int)target.x][(int)target.y], dice.getRoll());
+                								
+                								if (dice.getRoll() + pawn.getDisplace() - 50 == stretch.length) {
+                									pawn.setWon(true);
+                								}
+                							}
+                						}
+                						
+                					}
+                					
+                				}
                 				
-//                				Player currentPlayer = plrs.get(index + 1);
-//                    			
-//                    			// After moving the pawn, switch to the next player's turn
-//                                currentPlayer = (currentPlayer + 1) % 4;
-//                                System.out.println("Player " + (currentPlayer + 1) + "'s turn");
-//                                // Allow the next player to roll the dice
-//                                clickablePane.setDisable(false);
+                				// Disable clicking for your pawns after your click
+                				for (Pawn p : teamPawns) {
+                					p.setClick(false, sc);
+                				}
+                				
+                				// Allow another roll for the next player
+                				dice.toggleRoll();
+                				
                 			} else {
                 				// Logic to perform if pawn cannot be clicked
                 				lastPawn = null;
@@ -120,6 +181,17 @@ public class Main extends Application {
  				
    	 		}
    	 	}
+    }
+    
+    // Method to disconnect clicks
+    public static void disconnectPawnClicks(Pawn[][] pawns) {
+        for (Pawn[] teamPawns : pawns) {
+            for (Pawn pawn : teamPawns) {
+                if (pawn != null) {
+                    pawn.getImageView().setOnMouseClicked(null);
+                }
+            }
+        }
     }
     
     /**
@@ -136,14 +208,8 @@ public class Main extends Application {
    				 row[i].getRectangle().setOnMouseClicked(new EventHandler<MouseEvent>() {
                     	@Override
                     	public void handle(MouseEvent event) {
-                   		 	lastSpot = row[index];
-                        	System.out.println("Spot clicked! " + row[index]);
-                        	if (lastPawn != null) {
-                       		 	lastPawn.moveTo(lastSpot);
-                       		 	lastPawn.toggleClick(sc);
-                       		 	lastPawn = null;
-                       		 	System.out.println("Moved pawn to " + lastSpot);
-                        	}
+                   		 	
+                        	// Any functionality needed for clicking spots
                     	}
                 	});
    			 }
@@ -160,13 +226,68 @@ public class Main extends Application {
     	Menu m = new Menu(primaryStage, sc, root);
 	}
 	
+	public static void turn(ArrayList<Player> plrs, int players, Dice dice, Scene sc, Pawn[][] pawns, Board board, boolean isRoll) {
+		Player currentPlr = plrs.get(playerIndex);
+		int roll = dice.getRoll();
+		
+		// Disable clickable icons on pawns
+		for (Pawn[] teamPawns : pawns) {
+			for (Pawn pawn : teamPawns) {
+				Platform.runLater(() -> {
+					if (pawn != null) {
+						if (pawn.isClickable()) {
+							pawn.setClick(false, sc);
+						}
+					}
+				});
+			}
+		}
+		
+		// Set movability of pawns
+		for (Pawn pawn : currentPlr.getPawns()) {
+			if ((roll != 6 && pawn.returnSpot().equals(pawn.getHome())) || pawn.getWon()) {
+				pawn.setMovable(false);
+			} else {
+				pawn.setMovable(true);
+			}
+		}
+		
+		// If the player doesn't roll a 6, move index up
+		if (isRoll) {
+			if (roll != 6) {
+				playerIndex = (playerIndex + 1) % players;
+			}
+		} else {
+			playerIndex = (playerIndex + 1) % players;
+		}
+		
+		// Make pawns clickable
+		if (isRoll) {
+			int movablePawns = 0;
+			for (Pawn pawn : currentPlr.getPawns()) {
+				if (pawn != null && pawn.getMovable() == true) {
+					movablePawns++;
+				}
+				Platform.runLater(() -> {
+					if (pawn != null && pawn.getMovable() == true) {
+						pawn.setClick(true, sc);
+					}
+				});
+			}
+			
+			if (movablePawns > 0) {
+				dice.toggleRoll();
+			}
+		}
+	}
+	
 	public static void gameplay(Stage primaryStage, Scene sc, StackPane root, int players) {
-		primaryStage.setTitle("Ludo"); // Set title if main game
+		primaryStage.setTitle("Ludo"); // Set title of main game
 	   	 
    	 	// Game Window variables
     	final Pane clickablePane = new Pane();
     	final Board board = new Board(750, 750, clickablePane);
-//    	primaryStage.setResizable(false);
+    	primaryStage.setResizable(false);
    	 
     	// Board variables
     	Spot[][] spots = board.getSpots();
@@ -183,10 +304,6 @@ public class Main extends Application {
     	Pawn[] greenPawns = new Pawn[4];
     	Pawn[][] pawns = {bluePawns, orangePawns, yellowPawns, greenPawns};
     	
-    	// Game variables
-    	boolean won = false;
-    	int playerIndex = 0;
-    	
     	// Add board to StackPane
     	addToParent(board.getCanvas(), root);
    	 
@@ -196,9 +313,9 @@ public class Main extends Application {
     	// Populate pawn array with 4 players (create and place pawns on home spots)
     	populate(players, spots, homes, pawns, clickablePane);
    	 
-    	// Set up event handler to detect clicks on pawns and spots
-    	clickConnectPawns(pawns, Player.getPlayers());
+    	// Set up event handler to detect clicks on spots
     	clickConnectSpots(spots, sc);
+    	
     	
     	// Show boards
     	primaryStage.setScene(sc);
@@ -206,15 +323,6 @@ public class Main extends Application {
 		
 		// Allow the first player to roll the dice
         clickablePane.setDisable(false);
-		
-		// Create and show dice
-		JFrame frame = new JFrame("Dice");
-        Dice dice = new Dice();
-        frame.add(dice);
-        frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocation(400,300);
-        frame.setVisible(true);
         
         // Create players
         Player blue = new Player(1, bluePawns);
@@ -223,29 +331,28 @@ public class Main extends Application {
         Player green = new Player(4, greenPawns);
         ArrayList<Player> plrs = Player.getPlayers();
         
-        // Primary game loop
-        while (!won) {
-        	Player currentPlr = plrs.get(playerIndex);
-        	int roll = dice.getRoll();
-        	
-        	if (roll == 6) {
-        		continue;
-        	} else {
-        		if (playerIndex == 3) {
-        			playerIndex = 0;
-        		} else {
-        			playerIndex++; // Moves to the next player's turn
-        		}
-        	}
-        	
-        	// Allow player to click their pawns
-        	for (Pawn pawn : currentPlr.getPawns()) {
-    			if (pawn != null) {
-    				pawn.toggleClick(sc);
-    			}
-    		}
+        switch (players) {
+        	case 2:
+        		plrs.remove(3);
+        		plrs.remove(2);
+        		break;
+        	case 3:
+        		plrs.remove(3);
+        		break;
         }
         
+        // Create and show dice
+ 		JFrame frame = new JFrame("Dice");
+	    Dice dice = new Dice(plrs, players, sc, pawns, board);
+	    frame.add(dice);
+	    frame.pack();
+	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    frame.setLocation(400,300);
+	    frame.setVisible(true);
+	    
+	    // Connect pawn clicks
+    	clickConnectPawns(pawns, Player.getPlayers(), players, dice, board, sc);
+	    
     	
         /**
    	 	 * TODOS:

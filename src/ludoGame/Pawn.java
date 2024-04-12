@@ -6,6 +6,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+
+import java.util.ArrayList;
+
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -20,11 +23,18 @@ import javafx.scene.control.Label;
  * @author Reggie Andrade
  */
 public class Pawn {
-	private Spot spot; // Current spot of the pawn
+	private Spot spot = null; // Current spot of the pawn
+	private Spot home;
 	private int player = 0;
+	private int displace = 0;
+	private int moves = 0;
+	private int offset = 0;
+	private boolean onBoard;
 	private Pane p;
 	private ImageView imageView; // ImageView to display the pawn image
 	private boolean clickable = false;
+	private boolean movable = true;
+	private boolean won = false;
 	Ellipse selectCircle = new Ellipse();
 
 	/**
@@ -36,6 +46,7 @@ public class Pawn {
 	 */
 	public Pawn(Spot spot, int player, Pane pawnPane) {
         this.spot = spot;
+        home = spot;
         this.player = player;
         this.p = pawnPane;
         Image img = null;
@@ -66,17 +77,113 @@ public class Pawn {
 
         // Add the ImageView to the pawnPane
         p.getChildren().add(imageView);
+        
+        spot.occupy(this);
     }
 
 	/**
 	 * Method to move the pawn to a spot.
 	 * 
 	 * @param newSpot The spot to move the pawn to
+	 * @param amountOfMoves The amount of spots the pawn moved
+	 * @return Pawn object which has been captured, null otherwise.
 	 */
-	public void moveTo(Spot newSpot) {
+	public ArrayList<Pawn> moveTo(Spot newSpot, int amountOfMoves) {
+		if (spot != null && !(spot.equals(newSpot))) {
+			spot.unoccupy(this);
+			offset = 0;
+		}
+		
 		spot = newSpot;
+		ArrayList<Pawn> cap = new ArrayList<Pawn>();
+		
 		imageView.setTranslateX(spot.getX() + spot.getSize() / 2 - imageView.getFitWidth() / 2);
         imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
+        
+        if (!(spot.getOccupying().isEmpty())) {
+        	ArrayList<Pawn> pawns = spot.getOccupying();
+        	int least = 0;
+        	for (int i = 0; i < pawns.size(); i++) {
+        		Pawn p = pawns.get(i);
+        		if (spot.getType().equals("safe") || pawns.get(i).pawnColor() == player) {
+        			
+    				if (p.getOffset() < least) {
+    					least = p.getOffset();
+    				}
+        		} else {
+        			cap.add(pawns.get(i));
+        		}
+        	}
+        	
+        	if (cap.isEmpty()) {
+        		this.applyOffset(least - 10);
+        	}
+		}
+		
+		spot.occupy(this);
+        
+        displace += amountOfMoves;
+        moves++;
+        
+        return cap;
+	}
+	
+	/**
+	 * Overloaded method to move the pawn to a spot, and declare if it is on the board.
+	 * 
+	 * @param amountOfMoves The amount of spots the pawn moved
+	 * @param on Whether the pawn is moving onto the board or not
+	 * @return Pawn objects which have been captured, null otherwise.
+	 */
+	public ArrayList<Pawn> moveTo(Spot newSpot, int amountOfMoves, boolean on) {
+		if (spot != null && !(spot.equals(newSpot))) {
+			spot.unoccupy(this);
+			offset = 0;
+		}
+		
+		spot = newSpot;
+		ArrayList<Pawn> cap = new ArrayList<Pawn>();
+		
+		imageView.setTranslateX(spot.getX() + spot.getSize() / 2 - imageView.getFitWidth() / 2);
+        imageView.setTranslateY(spot.getY() + spot.getSize() / 2 - imageView.getFitHeight() / 2);
+        
+        if (!(spot.getOccupying().isEmpty())) {
+        	ArrayList<Pawn> pawns = spot.getOccupying();
+        	int least = 0;
+        	for (int i = 0; i < pawns.size(); i++) {
+        		Pawn p = pawns.get(i);
+        		if (spot.getType().equals("safe") || pawns.get(i).pawnColor() == player) {
+        			
+    				if (p.getOffset() < least) {
+    					least = p.getOffset();
+    				}
+        		} else {
+        			cap.add(pawns.get(i));
+        		}
+        	}
+        	
+        	if (cap.isEmpty()) {
+        		this.applyOffset(least - 10);
+        	}
+		}
+		
+		spot.occupy(this);
+        
+        displace += amountOfMoves;
+        moves++;
+        onBoard = on;
+        
+        return cap;
+	}
+	
+	/**
+	 * Translate the pawn upwards or downwards by a certain offset. Used for stacked pawns
+	 * 
+	 * @param amount Amount of offset to apply (in pixels)
+	 */
+	public void applyOffset(int amount) {
+		offset = amount;
+		imageView.setTranslateY(spot.getY() + offset + spot.getSize() / 2 - imageView.getFitHeight() / 2);
 	}
 	
 	/**
@@ -85,8 +192,8 @@ public class Pawn {
 	 * 
 	 * @param sc The scene the pawn resides on (used for changing mouse cursor when hovering pawn)
 	 */
-	public void toggleClick(Scene sc) {
-		if (!clickable) {
+	public void setClick(boolean state, Scene sc) {
+		if (state) {
 			clickable = true;
 			
 	        imageView.setMouseTransparent(false);
@@ -130,7 +237,15 @@ public class Pawn {
 	        p.getChildren().remove(selectCircle);
 		}
 	}
-		
+	
+	public void reset() {
+		spot.unoccupy(this);
+		offset = 0;
+		moves = 0;
+		displace = 0;
+		onBoard = false;
+	}
+	
 	/**
 	 * Get the spot the pawn resides on
 	 * 
@@ -167,4 +282,68 @@ public class Pawn {
 		return clickable;
 	}
 	
+	/**
+	 * Return the amount of times the pawn has moved
+	 * 
+	 * @return Amount of moves
+	 */
+	public int getMoves() {
+		return moves;
+	}
+	
+	/**
+	 * Return the original home position of the pawn
+	 * 
+	 * @return
+	 */
+	public Spot getHome() {
+		return home;
+	}
+	
+	/**
+	 * Return the amount of displacement the pawn has
+	 * 
+	 * @return Movements on the board (displacement)
+	 */
+	public int getDisplace() {
+		return displace;
+	}
+	
+	/**
+	 * Returns the current Y offset of the pawn
+	 * 
+	 * @return Y offset
+	 */
+	public int getOffset() {
+		return offset;
+	}
+	
+	public boolean getMovable() {
+		return movable;
+	}
+	
+	public void setMovable(boolean movable) {
+		this.movable = movable;
+	}
+	
+	public boolean getWon() {
+		return won;
+	}
+	
+	public void setWon(boolean won) {
+		this.won = won;
+	}
+	
+	/**
+	 * Return if the pawn is on the board (outside of home)
+	 * 
+	 * @return If the pawn is on the board (true/false)
+	 */
+	public boolean isOnBoard() {
+		return onBoard;
+	}
+	
+	public String toString() {
+		return "Pawn - Team: " + player + " | Moves: " + moves + " | Clickable: " + clickable;
+	}
 }

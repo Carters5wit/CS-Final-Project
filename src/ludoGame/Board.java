@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 /**
  * Responsible for drawing the primary Ludo board to the window and handling board-related
  * logic.
@@ -19,10 +20,10 @@ public class Board {
     private Spot[][] spots = new Spot[rows][columns]; // Array to store spots
     
     // Coordinates for each player's home stretch
-    private XY[] stretchBlue = {XY.form(7,1), XY.form(7,2), XY.form(7,3), XY.form(7,4), XY.form(7,5)};
-    private XY[] stretchOrange = {XY.form(1,7), XY.form(2,7), XY.form(3,7), XY.form(4,7), XY.form(5,7)};
-    private XY[] stretchYellow = {XY.form(13,7), XY.form(12,7), XY.form(11,7), XY.form(10,7), XY.form(9,7)};
-    private XY[] stretchGreen = {XY.form(7,13), XY.form(7,12), XY.form(7,11), XY.form(7,10), XY.form(7,9)};
+    private XY[] stretchBlue = {XY.form(7,1), XY.form(7,2), XY.form(7,3), XY.form(7,4), XY.form(7,5), XY.form(7,6)};
+    private XY[] stretchOrange = {XY.form(1,7), XY.form(2,7), XY.form(3,7), XY.form(4,7), XY.form(5,7), XY.form(6,7)};
+    private XY[] stretchYellow = {XY.form(13,7), XY.form(12,7), XY.form(11,7), XY.form(10,7), XY.form(9,7), XY.form(8,7)};
+    private XY[] stretchGreen = {XY.form(7,13), XY.form(7,12), XY.form(7,11), XY.form(7,10), XY.form(7,9), XY.form(7,8)};
     private XY[][] stretches = {stretchBlue, stretchOrange, stretchYellow, stretchGreen};
     
     // Coordinates for each player's home base
@@ -39,12 +40,6 @@ public class Board {
     private XY startYellow = new XY(13,6);
     private XY[] starts = {startBlue, startOrange, startYellow, startGreen};
     
-    private XY finalBlue = new XY(7,6);
-    private XY finalOrange = new XY(6,7);
-    private XY finalGreen = new XY(7,8);
-    private XY finalYellow = new XY(8,7);
-    private XY[] finals = {finalBlue, finalOrange, finalYellow, finalGreen};
-    
     private XY[] safes = {new XY(8,2),new XY(2,6),new XY(6,12),new XY(12,8)};
     
     // Color for each player
@@ -59,28 +54,28 @@ public class Board {
     private XY[] segment1 = {
         XY.form(6, 2), XY.form(6, 3), XY.form(6, 4), XY.form(6, 5),
         XY.form(5, 6), XY.form(4, 6), XY.form(3, 6), XY.form(2, 6), XY.form(1, 6),
-        XY.form(0, 6), XY.form(0, 7), XY.form(0, 8)
+        XY.form(0, 6), XY.form(0, 7), XY.form(0, 8), XY.form(1, 8)
     };
 
     // Segment 2: Runs from the front of orange start to behind green start
     private XY[] segment2 = {
         XY.form(2, 8), XY.form(3, 8), XY.form(4, 8), XY.form(5, 8),
         XY.form(6, 9), XY.form(6, 10), XY.form(6, 11), XY.form(6, 12), XY.form(6, 13),
-        XY.form(6, 14), XY.form(7, 14), XY.form(8, 14)
+        XY.form(6, 14), XY.form(7, 14), XY.form(8, 14), XY.form(8, 13)
     };
 
     // Segment 3: Runs from the front of green start to behind yellow start
     private XY[] segment3 = {
         XY.form(8, 12), XY.form(8, 11), XY.form(8, 10), XY.form(8, 9),
         XY.form(9, 8), XY.form(10, 8), XY.form(11, 8), XY.form(12, 8), XY.form(13, 8),
-        XY.form(14, 8), XY.form(14, 7), XY.form(14, 6)
+        XY.form(14, 8), XY.form(14, 7), XY.form(14, 6), XY.form(13, 6)
     };
 
     // Segment 4: Runs from the front of yellow start to behind blue start
     private XY[] segment4 = {
         XY.form(12, 6), XY.form(11, 6), XY.form(10, 6), XY.form(9, 6),
         XY.form(8, 5), XY.form(8, 4), XY.form(8, 3), XY.form(8, 2), XY.form(8, 1),
-        XY.form(8, 0), XY.form(7, 0), XY.form(6, 0)
+        XY.form(8, 0), XY.form(7, 0), XY.form(6, 0), XY.form(6, 1)
     };
 
     
@@ -96,15 +91,13 @@ public class Board {
         for (XY[] segment : segments) {
             totalLength += segment.length;
         }
-        // Exclude the last element of the last segment
-        totalLength--;
 
         XY[] combinedSegments = new XY[totalLength];
         int index = 0;
 
         // Combine segments
         for (XY[] segment : segments) {
-            for (int i = 0; i < segment.length - 1; i++) {
+            for (int i = 0; i < segment.length; i++) {
                 combinedSegments[index++] = segment[i];
             }
         }
@@ -112,10 +105,28 @@ public class Board {
         return combinedSegments;
     }
     
-    private XY[] bluePath = combineSegments(segment1, segment2, segment3, segment4, stretchBlue);
-    private XY[] orangePath = combineSegments(segment2, segment3, segment4, segment1, stretchOrange);
-    private XY[] yellowPath = combineSegments(segment4, segment1, segment2, segment3, stretchYellow);
-    private XY[] greenPath = combineSegments(segment3, segment4, segment1, segment2, stretchGreen);
+    private XY[] trimLastTwoElements(XY[] array) {
+        if (array.length <= 2) {
+            return new XY[0]; // Return an empty array if there are 2 or fewer elements
+        }
+
+        // Create a new array with length reduced by 2
+        XY[] trimmedArray = new XY[array.length - 2];
+
+        // Copy elements except the last two
+        System.arraycopy(array, 0, trimmedArray, 0, array.length - 2);
+
+        return trimmedArray;
+    }
+
+    
+    private XY[] bluePath = trimLastTwoElements(combineSegments(segment1, segment2, segment3, segment4));
+    private XY[] orangePath = trimLastTwoElements(combineSegments(segment2, segment3, segment4, segment1));
+    private XY[] yellowPath = trimLastTwoElements(combineSegments(segment4, segment1, segment2, segment3));
+    private XY[] greenPath = trimLastTwoElements(combineSegments(segment3, segment4, segment1, segment2));
+
+    
+    
     
     /**
      * Creates and draws a new board object, 
@@ -279,21 +290,38 @@ public class Board {
             }
         }
         
+        // Making final spots
+        for (int i = 0; i < 4; i++) {
+        	XY[] stretch = stretches[i];
+        	XY coords = stretch[5];
+        	
+        	double x = coords.x * gapX;
+            double y = coords.y * gapY;
+        	
+        	spots[(int)coords.x][(int)coords.y] = new Spot(new XY(y,x), p);
+        	Rectangle r = spots[(int)coords.x][(int)coords.y].getRectangle();
+        	r.setStroke(Color.TRANSPARENT);
+        	r.setFill(Color.TRANSPARENT);
+        	spots[(int)coords.x][(int)coords.y].removeGradient();
+        }
+        
         // Change color of home stretch spots
         for (int z = 0; z < stretches.length; z++) {
         	XY[] stretch = stretches[z];
-        	for (XY coord : stretch) {
-            	int i = (int) coord.x;
+        	for (int i = 0; i < stretch.length - 1; i++) {
+        		XY coord = stretch[i];
+        		
+            	int c = (int) coord.x;
             	int j = (int) coord.y;
             	
             	if (z == 0) {
-            		spots[i][j].setHomeStrechColor(blue);
+            		spots[c][j].setHomeStrechColor(blue);
             	} else if (z == 1) {
-            		spots[i][j].setHomeStrechColor(orange);
+            		spots[c][j].setHomeStrechColor(orange);
             	} else if (z == 2) {
-            		spots[i][j].setHomeStrechColor(yellow);
+            		spots[c][j].setHomeStrechColor(yellow);
             	} else if (z == 3) {
-            		spots[i][j].setHomeStrechColor(green);
+            		spots[c][j].setHomeStrechColor(green);
             	}
             	
             }
@@ -388,14 +416,6 @@ public class Board {
 	    gc.drawImage(center, -scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight); // Draw the scaled image
 	    gc.restore(); // Restore the saved state (removes the translation and rotation)
 
-	    // Making invisible final spots
-        for (int i = 0; i < finals.length; i++) {
-        	XY coords = finals[i];
-        	
-        	double x = coords.x * gapX;
-            double y = coords.y * gapY;
-        	
-        	spots[(int)coords.x][(int)coords.y] = new Spot(new XY(x,y), "final", gc);
-        }
+	    
     }
 }
