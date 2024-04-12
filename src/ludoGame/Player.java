@@ -1,13 +1,16 @@
 package ludoGame;
 
+import java.util.ArrayList;
+
 /**
  * Responsible for representing a player within the Ludo game.
  * 
  * @author Reggie Andrade
  */
 public class Player {
-	Pawn[] pawns;
-	int id;
+	private Pawn[] pawns;
+	private int id;
+	private static ArrayList<Player> players = new ArrayList<>();
 	
 	/**
 	 * Basic constructor to create a player with a specific ID.
@@ -18,6 +21,7 @@ public class Player {
 	public Player(int id, Pawn[] pawns) {
 		this.id = id;
 		this.pawns = pawns;
+		players.add(this);
 	}
 	
 	/**
@@ -36,5 +40,14 @@ public class Player {
 	 */
 	public int getID() {
 		return id;
+	}
+	
+	/**
+	 * Gets a complete list of every player created.
+	 * 
+	 * @return Player ArrayList
+	 */
+	public static ArrayList<Player> getPlayers() {
+		return players;
 	}
 }
