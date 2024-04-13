@@ -12,6 +12,15 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 
+
+/**
+ * Responsible for implementing all the method and classes
+ * and making it all come together and work.
+ * 
+ * @author Toby Dokyi
+ * @author Reggie Andrade
+ */
+
 public class Main extends Application {
     
     private static Pawn lastPawn;

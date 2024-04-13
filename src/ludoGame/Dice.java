@@ -16,6 +16,14 @@ import java.awt.event.*;
  */
 import java.util.ArrayList;
 
+/**
+ * Responsible for rolling the dice
+ * and getting the last roll and sends 
+ * it to the main for pawn to move according to 
+ * the roll.
+ * 
+ * @author Ronny Ishimwe
+ */
 public class Dice extends JPanel implements MouseListener {
     private int lastRoll;
     private boolean enabled;

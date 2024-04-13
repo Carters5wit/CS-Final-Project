@@ -23,6 +23,15 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+
+/**
+ * Responsible for creating the game menu
+ * shows different buttons that leads to other windows
+ * for example the help button leads to the help window
+ * that displays the gae rules
+ * 
+ * @author Toby Dokyi
+ */
 public class Menu {
 	Stage gameStage;
 	Scene gameScene;
